@@ -1,8 +1,10 @@
 .gitkeep
+ui/abf.mp3
 ui/font-list.fnt
 ui/font-subtitle.fnt
 ui/font-window.fnt
 ui/font.fnt
+ui/loading.png
 ui/play_button.png
 ui/play_screen_background.jpg
 ui/uiskin.atlas

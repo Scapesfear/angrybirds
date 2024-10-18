@@ -5,7 +5,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import io.github.angry_birds.Main;
 
 /** Launches the desktop (LWJGL3) application. */
-public class Lwjgl3Launcher {
+public class Launcher {
     public static void main(String[] args) {
         if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
         createApplication();
@@ -27,7 +27,7 @@ public class Lwjgl3Launcher {
         //// If you remove the above line and set Vsync to false, you can get unlimited FPS, which can be
         //// useful for testing performance, but can also be very stressful to some hardware.
         //// You may also need to configure GPU drivers to fully disable Vsync; this can cause screen tearing.
-        configuration.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
+        configuration.setWindowedMode(1067,1000);
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
         configuration.setWindowIcon("angrybirdspace.png");
         return configuration;
