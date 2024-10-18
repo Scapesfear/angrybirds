@@ -13,7 +13,8 @@ import com.badlogic.gdx.Screen;
 public class FirstScreen implements Screen {
 
     private Main game;               // Reference to the main game class
-    private Texture playButton;      // To hold the texture for the play button
+    private Texture playButton;      // Texture for the play button
+    private Texture exitButton;      // Texture for the exit button
     private Texture background;      // To hold the background image
     private SpriteBatch batch;       // To handle rendering
     private OrthographicCamera camera; // Camera to handle the viewport
@@ -28,8 +29,9 @@ public class FirstScreen implements Screen {
     public void show() {
         // Initialize the SpriteBatch, background, and camera
         batch = new SpriteBatch();
-        background = new Texture(Gdx.files.internal("ui/play_screen_background.jpg")); // Add your background image here
-        playButton = new Texture(Gdx.files.internal("ui/play_button.png")); // Adjust path as needed
+        background = new Texture(Gdx.files.internal("ui/m_screen_background.jpg")); // Background image
+        playButton = new Texture(Gdx.files.internal("ui/play_button.png")); // Play button image
+        exitButton = new Texture(Gdx.files.internal("ui/exit_button.png")); // Exit button image
 
         // Set up the camera and viewport
         camera = new OrthographicCamera();
@@ -40,7 +42,6 @@ public class FirstScreen implements Screen {
         // Initialize the touch position vector
         touchPos = new Vector3();
     }
-
 
     @Override
     public void render(float delta) {
@@ -59,31 +60,46 @@ public class FirstScreen implements Screen {
         batch.draw(background, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
 
         // Scale the play button (e.g., make it 1/5 of its original size)
-        float scaledWidth = playButton.getWidth() / 5;  // Adjust this to 1/5 of the original width
-        float scaledHeight = playButton.getHeight() / 5;  // Adjust this to 1/5 of the original height
+        float scaledPlayButtonWidth = playButton.getWidth() / 10;
+        float scaledPlayButtonHeight = playButton.getHeight() / 10;
 
-        // Draw the play button at the center of the screen with the scaled size
-        float playButtonX = (viewport.getWorldWidth() - scaledWidth) / 2;
-        float playButtonY = (viewport.getWorldHeight() - scaledHeight) / 2;
-        batch.draw(playButton, playButtonX, playButtonY, scaledWidth, scaledHeight);
+        // Draw the play button at the center of the screen
+        float playButtonX = (viewport.getWorldWidth() - scaledPlayButtonWidth) / 2;
+        float playButtonY = ((viewport.getWorldHeight() - scaledPlayButtonHeight) / 2) - 450;
+        batch.draw(playButton, playButtonX, playButtonY, scaledPlayButtonWidth, scaledPlayButtonHeight);
+
+        // Scale and position the exit button in the lower-left corner
+
+
+
+        // Position the exit button in the bottom-left corner with some margin
+        float exitButtonX = 50;  // 20 pixels from the left edge
+        float exitButtonY = 50;  // 20 pixels from the bottom edge
+        batch.draw(exitButton, exitButtonX, exitButtonY, 100, 100); // Draw the exit button
 
         batch.end();
 
         // Handle input (touch/click)
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.justTouched()) {
             // Get the touch position in screen space and unproject it to world space
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
 
-            // Check if the play button is touched (adjusted for scaled size)
-            if (touchPos.x > playButtonX && touchPos.x < playButtonX + scaledWidth
-                && touchPos.y > playButtonY && touchPos.y < playButtonY + scaledHeight) {
-                // Play button clicked, change screen to MainMenuScreen
+            // Check if the play button is touched
+            if (touchPos.x > playButtonX && touchPos.x < playButtonX + scaledPlayButtonWidth
+                && touchPos.y > playButtonY && touchPos.y < playButtonY + scaledPlayButtonHeight) {
+                // Play button clicked, change screen to MenuScreen
                 game.setScreen(new MenuScreen(game));
+            }
+
+            // Check if the exit button is touched
+            if (touchPos.x > exitButtonX && touchPos.x < exitButtonX + 100
+                && touchPos.y > exitButtonY && touchPos.y < exitButtonY + 100) {
+                // Exit button clicked, exit the game
+                Gdx.app.exit();
             }
         }
     }
-
 
     @Override
     public void resize(int width, int height) {
@@ -107,6 +123,7 @@ public class FirstScreen implements Screen {
     public void dispose() {
         // Destroy screen's assets here
         playButton.dispose(); // Dispose of the play button texture
+        exitButton.dispose(); // Dispose of the exit button texture
         background.dispose(); // Dispose of the background texture
         batch.dispose();      // Dispose of the sprite batch
     }

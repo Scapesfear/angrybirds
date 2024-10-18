@@ -2,77 +2,103 @@ package io.github.angry_birds;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import org.w3c.dom.Text;
 
 public class MenuScreen implements Screen {
 
     private Main game;              // Reference to the main game class
-    private ShapeRenderer shapeRenderer;  // To render rectangles
-    private SpriteBatch batch;           // To render text
-    private BitmapFont font;             // To display numbers in the rectangles
-
+    private SpriteBatch batch;
+    private ShapeRenderer shapeRenderer;
+    private Texture background;
+    private Texture backbutton;
+    private BitmapFont font;
+    private OrthographicCamera camera;
+    private Viewport viewport;
+    private Vector3 touchPos ;
     public MenuScreen(Main game) {
         this.game = game;
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
         font = new BitmapFont(); // Default font
         font.getData().setScale(2); // Set font size larger for better visibility
+        touchPos = new Vector3();
     }
 
     @Override
     public void show() {
-        // Called when this screen becomes the current screen for the game.
+        batch = new SpriteBatch();
+        background = new Texture(Gdx.files.internal("ui/p_screen_background.jpg"));
+        backbutton = new Texture(Gdx.files.internal("ui/back_button.png"));
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(1920, 1080, camera);
+        camera.position.set(1920 / 2f, 1080 / 2f, 0);
+
+
     }
+
 
     @Override
     public void render(float delta) {
         // Clear the screen
-        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);  // Optional: Set background color for blank areas
         Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
 
-        // Render 4 rectangles, each with a number
-        float rectWidth = 200;
-        float rectHeight = 100;
+        // Update camera
+        camera.update();
 
-        float startX = (Gdx.graphics.getWidth() - rectWidth) / 2;  // Center rectangles horizontally
-        float startY = Gdx.graphics.getHeight() - rectHeight * 2;  // Place first rectangle higher
+        // Draw the background image using the batch
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        batch.draw(background, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.BLUE);
+        // Draw the back button
+        batch.draw(backbutton, 50, 50, 100, 100);
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.BLUE);  // Set rectangle color
 
-        // Draw the first rectangle
-        shapeRenderer.rect(startX, startY, rectWidth, rectHeight);
+        // Draw the rectangle (x, y, width, height)
+        shapeRenderer.rect(300,200 , 300, 700);
+        shapeRenderer.rect(800,200 , 300, 700);
+        shapeRenderer.rect(1300,200 , 300, 700);
 
-        // Draw the second rectangle below
-        shapeRenderer.rect(startX, startY - rectHeight - 20, rectWidth, rectHeight);
 
-        // Draw the third rectangle below
-        shapeRenderer.rect(startX, startY - 2 * (rectHeight + 20), rectWidth, rectHeight);
+        batch.end();
 
-        // Draw the fourth rectangle below
-        shapeRenderer.rect(startX, startY - 3 * (rectHeight + 20), rectWidth, rectHeight);
+
 
         shapeRenderer.end();
 
-        // Render the numbers in the center of the rectangles
-        batch.begin();
-        font.setColor(Color.WHITE);
 
-        // Draw numbers inside each rectangle
-        font.draw(batch, "1", startX + rectWidth / 2 - 10, startY + rectHeight / 2 + 10);
-        font.draw(batch, "2", startX + rectWidth / 2 - 10, startY - rectHeight / 2 + 10);
-        font.draw(batch, "3", startX + rectWidth / 2 - 10, startY - 3 * rectHeight / 2 - 30);
-        font.draw(batch, "4", startX + rectWidth / 2 - 10, startY - 5 * rectHeight / 2 - 50);
+        if (Gdx.input.justTouched()) {
+            // Get the touch position
+            float x = Gdx.input.getX();
+            float y = Gdx.input.getY();
 
-        batch.end();
+            // Convert the touch position to the game's coordinate system
+
+            camera.unproject(touchPos.set(x, y, 0));
+
+            // Check if the touch position is inside the back button
+            if (touchPos.x >= 50 && touchPos.x <= 150 && touchPos.y >= 50 && touchPos.y <= 150) {
+                game.setScreen(new FirstScreen(game));
+            }
+        }
     }
 
     @Override
     public void resize(int width, int height) {
-        // Called when the window is resized
+        viewport.update(width, height);
     }
 
     @Override
@@ -85,11 +111,11 @@ public class MenuScreen implements Screen {
 
     @Override
     public void hide() {
+        dispose();
     }
 
     @Override
     public void dispose() {
-        // Clean up resources
         shapeRenderer.dispose();
         batch.dispose();
         font.dispose();
