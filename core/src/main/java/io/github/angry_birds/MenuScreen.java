@@ -37,7 +37,7 @@ public class MenuScreen implements Screen {
     @Override
     public void show() {
         batch = new SpriteBatch();
-        background = new Texture(Gdx.files.internal("ui/p_screen_background.jpg"));
+        background = new Texture(Gdx.files.internal("ui/m_screen_background.jpg"));
         backbutton = new Texture(Gdx.files.internal("ui/back_button.png"));
         camera = new OrthographicCamera();
         viewport = new FitViewport(1920, 1080, camera);

@@ -6,16 +6,21 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class LoadingScreen implements Screen {
 
     private final Main game;               // Reference to the main game class
-    private Texture playButton;            // To hold the texture for the play button
     private Texture background;            // To hold the background image
     private SpriteBatch batch;             // To handle rendering
     private OrthographicCamera camera;     // Camera to handle the viewport
     private Sound sound;
     private long soundId;
+
+    private float elapsedTime;             // Track time to control loading screen duration
+    private static final float LOADING_DURATION = 5.0f; // Loading duration of 5 seconds
+
+    private ShapeRenderer shapeRenderer;   // To draw the loading bar
 
     public LoadingScreen(Main game) {
         this.game = game;
@@ -26,15 +31,19 @@ public class LoadingScreen implements Screen {
         // Initialize the SpriteBatch, background, and camera
         batch = new SpriteBatch();
         background = new Texture(Gdx.files.internal("ui/loading.png")); // Add your background image here
-        playButton = new Texture(Gdx.files.internal("ui/play_button.png")); // Adjust path as needed
         sound = Gdx.audio.newSound(Gdx.files.internal("ui/abf.mp3"));
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // Set camera size to screen size
         camera.update();
 
+        // Initialize the ShapeRenderer for the loading bar
+        shapeRenderer = new ShapeRenderer();
+
         // Play sound only once when the screen is shown
         soundId = sound.play(0.75f); // Start playing at 75% volume
         sound.setLooping(soundId, true); // Set looping
+
+        elapsedTime = 0f; // Reset elapsed time when the screen is shown
     }
 
     @Override
@@ -80,6 +89,32 @@ public class LoadingScreen implements Screen {
         // Draw the scaled and centered background
         batch.draw(background, xPosition, yPosition, finalWidth, finalHeight);
         batch.end();
+
+        // Update the elapsed time
+        elapsedTime += delta;
+
+        // Calculate loading progress (from 0.0 to 1.0 based on elapsed time)
+        float progress = Math.min(elapsedTime / LOADING_DURATION, 1.0f);
+
+        // Draw the loading bar (progress bar)
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(0, 1, 0, 1); // Green loading bar
+
+        // Calculate loading bar dimensions and position
+        float barWidth = screenWidth * 0.6f; // Loading bar takes up 60% of screen width
+        float barHeight = 30;                // Height of the loading bar
+        float barX = (screenWidth - barWidth) / 2;  // Center the loading bar horizontally
+        float barY = screenHeight * 0.1f;          // Position the loading bar near the bottom
+
+        // Draw the progress based on the elapsed time
+        shapeRenderer.rect(barX, barY, barWidth * progress, barHeight);
+        shapeRenderer.end();
+
+        // After the loading duration, transition to the FirstScreen
+        if (elapsedTime >= LOADING_DURATION) {
+            sound.stop(soundId);  // Stop the sound before transitioning
+            game.setScreen(new FirstScreen(game));  // Transition to the FirstScreen
+        }
     }
 
     @Override
@@ -106,5 +141,6 @@ public class LoadingScreen implements Screen {
         sound.dispose();       // Dispose of the sound
         background.dispose();  // Dispose of the background texture
         batch.dispose();       // Dispose of the sprite batch
+        shapeRenderer.dispose(); // Dispose of the ShapeRenderer
     }
 }

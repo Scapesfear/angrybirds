@@ -29,7 +29,7 @@ public class FirstScreen implements Screen {
     public void show() {
         // Initialize the SpriteBatch, background, and camera
         batch = new SpriteBatch();
-        background = new Texture(Gdx.files.internal("ui/m_screen_background.jpg")); // Background image
+        background = new Texture(Gdx.files.internal("ui/p_screen_background.jpg")); // Background image
         playButton = new Texture(Gdx.files.internal("ui/play_button.png")); // Play button image
         exitButton = new Texture(Gdx.files.internal("ui/exit_button.png")); // Exit button image
 
@@ -46,7 +46,7 @@ public class FirstScreen implements Screen {
     @Override
     public void render(float delta) {
         // Clear the screen
-        Gdx.gl.glClearColor(1, 1, 1, 1); // White background
+        Gdx.gl.glClearColor(0, 0, 0, 1); // White background
         Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
 
         // Update the camera
