@@ -30,7 +30,7 @@ public class LoadingScreen implements Screen {
     public void show() {
         // Initialize the SpriteBatch, background, and camera
         batch = new SpriteBatch();
-        background = new Texture(Gdx.files.internal("ui/loading.png")); // Add your background image here
+        background = new Texture(Gdx.files.internal("ui/loading.jpg")); // Add your background image here
         sound = Gdx.audio.newSound(Gdx.files.internal("ui/abf.mp3"));
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // Set camera size to screen size
@@ -45,6 +45,7 @@ public class LoadingScreen implements Screen {
 
         elapsedTime = 0f; // Reset elapsed time when the screen is shown
     }
+
 
     @Override
     public void render(float delta) {
@@ -98,16 +99,23 @@ public class LoadingScreen implements Screen {
 
         // Draw the loading bar (progress bar)
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0, 1, 0, 1); // Green loading bar
+
+        // First draw the black background bar
+        shapeRenderer.setColor(0, 0, 0, 1);  // Black color for background bar
 
         // Calculate loading bar dimensions and position
-        float barWidth = screenWidth * 0.6f; // Loading bar takes up 60% of screen width
+        float barWidth = screenWidth * 0.4f; // Loading bar takes up 40% of screen width
         float barHeight = 30;                // Height of the loading bar
         float barX = (screenWidth - barWidth) / 2;  // Center the loading bar horizontally
-        float barY = screenHeight * 0.1f;          // Position the loading bar near the bottom
+        float barY = (screenHeight * 0.1f) - 10;    // Position the loading bar near the bottom
 
-        // Draw the progress based on the elapsed time
+        // Draw the black background bar first (empty bar)
+        shapeRenderer.rect(barX, barY, barWidth, barHeight);
+
+        // Now draw the yellow progress bar on top of the black background
+        shapeRenderer.setColor(1, 1, 0, 1);  // Yellow color for loading bar
         shapeRenderer.rect(barX, barY, barWidth * progress, barHeight);
+
         shapeRenderer.end();
 
         // After the loading duration, transition to the FirstScreen
@@ -116,6 +124,7 @@ public class LoadingScreen implements Screen {
             game.setScreen(new FirstScreen(game));  // Transition to the FirstScreen
         }
     }
+
 
     @Override
     public void resize(int width, int height) {

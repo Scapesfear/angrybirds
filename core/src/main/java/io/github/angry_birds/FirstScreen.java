@@ -60,12 +60,12 @@ public class FirstScreen implements Screen {
         batch.draw(background, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
 
         // Scale the play button (e.g., make it 1/5 of its original size)
-        float scaledPlayButtonWidth = playButton.getWidth() / 10;
-        float scaledPlayButtonHeight = playButton.getHeight() / 10;
+        float scaledPlayButtonWidth = playButton.getWidth() / 12;
+        float scaledPlayButtonHeight = playButton.getHeight() / 12;
 
         // Draw the play button at the center of the screen
         float playButtonX = (viewport.getWorldWidth() - scaledPlayButtonWidth) / 2;
-        float playButtonY = ((viewport.getWorldHeight() - scaledPlayButtonHeight) / 2) - 450;
+        float playButtonY = ((viewport.getWorldHeight() - scaledPlayButtonHeight) / 2) ;
         batch.draw(playButton, playButtonX, playButtonY, scaledPlayButtonWidth, scaledPlayButtonHeight);
 
         // Scale and position the exit button in the lower-left corner
