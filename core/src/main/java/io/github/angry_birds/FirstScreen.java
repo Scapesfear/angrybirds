@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class FirstScreen implements Screen {
@@ -21,18 +23,26 @@ public class FirstScreen implements Screen {
     private OrthographicCamera camera;
     private Viewport viewport;
     private Vector3 touchPos;
-    private Sound sound;
+    private  Sound sound;
     private static final float WORLD_WIDTH = 1600;
     private static final float WORLD_HEIGHT = 900;
+    private Stage stage;
 
     public FirstScreen(Main game) {
         this.game = game;
+        this.sound = Gdx.audio.newSound(Gdx.files.internal("ui/abf.mp3"));
+        long soundId = sound.play(0.75f);
+        sound.setLooping(soundId, true);
+
+    }
+    public FirstScreen(Main game,Sound sound1) {
+        this.game = game;
+        sound =sound1;
     }
 
     @Override
     public void show() {
         batch = new SpriteBatch();
-        sound = Gdx.audio.newSound(Gdx.files.internal("ui/abf.mp3"));
         background = new Texture(Gdx.files.internal("ui/egg.png"));
         playButton = new Texture(Gdx.files.internal("ui/playbutton.png"));
         exitButton = new Texture(Gdx.files.internal("ui/quit3.png"));
@@ -41,15 +51,17 @@ public class FirstScreen implements Screen {
         viewport.apply();
         camera.position.set(WORLD_WIDTH / 2f, WORLD_HEIGHT / 2f, 0);
         camera.update();
+        stage = new Stage(new ScreenViewport());
+        Gdx.input.setInputProcessor(stage);
         touchPos = new Vector3();
-        long soundId = sound.play(0.75f); // Start playing at 75% volume
-        sound.setLooping(soundId, true); // Set looping
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(5/255f, 28/255f, 78/255f,1.0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stage.act();
+        stage.draw();
 
         camera.update();
         batch.setProjectionMatrix(camera.combined);

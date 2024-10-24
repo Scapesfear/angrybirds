@@ -2,6 +2,8 @@ package io.github.angry_birds;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,11 +20,14 @@ public class levelbg implements Screen {
     private OrthographicCamera camera;
     private Texture backbutton;
     private Viewport viewport;
+    private Sound sound;
 
 
 
-    public levelbg(Main game) {
+    public levelbg(Main game,Sound asound) {
         this.game = game;
+        sound = asound;
+        sound.stop();
     }
 
     @Override
@@ -43,7 +48,7 @@ public class levelbg implements Screen {
     @Override
     public void render(float v) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -70,16 +75,12 @@ public class levelbg implements Screen {
         batch.draw(purple3, 1400, 750,400 , 400);
         batch.draw(purple3, 1750, 750,400 , 400);
 
-
         batch.draw(levelbgdunes, 0, 200,1920 , 300);
         batch.draw(levelbgsand, 0, 0,1920 , 200);
         batch.draw(levelbgsand, 0, 90,1920 , 200);
         batch.draw(backbutton, 1700, 880, 75, 75);
 
         batch.end();
-
-
-
     }
 
     @Override
@@ -89,19 +90,13 @@ public class levelbg implements Screen {
     }
 
     @Override
-    public void pause() {
-
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-
-    }
+    public void resume() {}
 
     @Override
-    public void hide() {
-
-    }
+    public void hide() {dispose();}
 
     @Override
     public void dispose() {
@@ -109,6 +104,7 @@ public class levelbg implements Screen {
         levelbgdunes.dispose();
         purple1.dispose();
         batch.dispose();
+        sound.dispose();
     }
 
 
