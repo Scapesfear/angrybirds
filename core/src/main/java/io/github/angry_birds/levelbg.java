@@ -42,6 +42,9 @@ public class levelbg implements Screen {
     private Texture planet;
     private Catapult catapult;
     private List<Bird> birds;
+    private Texture planet2;
+    private List<Block> blocks;
+    private List<Pig> pigs;
 
     public levelbg(Main game, Sound asound) {
         this.game = game;
@@ -68,7 +71,19 @@ public class levelbg implements Screen {
         play = new Texture("ui/play_.png");
         catapult= new Catapult("ui/catapult.png", 400, 400);
         planet = new Texture("ui/planet.png");
+        planet2 = new Texture("ui/planet.png");
         birds = new ArrayList<>();
+        birds.add(new RedBird(0, 378, 400,55,55));
+        birds.add(new Chuck(20, 335, 370,55,55));
+        birds.add(new Bomb(55, 293, 315,60,60));
+        blocks = new ArrayList<>();
+        blocks.add(new Wood(90, 1170, 530, 1f, 1f));
+        blocks.add(new Ice(0, 1170-100.5f+5+1+1, 730-100.5f+10, 1f, 1f));
+        blocks.add(new Stone(90, 1170-201, 530, 1f, 1f));
+        pigs = new ArrayList<>();
+        pigs.add(new AlienPig(0, 1170-100.5f+25, 730-100.5f+25, 75f, 75f ));
+        pigs.add(new HektorPorko(0, 1170-201+25+30+25+100+30, 530+25+100, 75f, 75f));
+        pigs.add(new KingPig(0, 1170-201+25+30+30+50+15+5, 530+25+100-180+5, 75f, 75f));
         camera = new OrthographicCamera();
         viewport = new FitViewport(1600, 900, camera);
         camera.position.set(1600 / 2f, 900 / 2f, 0);
@@ -141,7 +156,19 @@ public class levelbg implements Screen {
         batch.draw(backbutton, 50, 40, scaledExitButtonWidth, scaledExitButtonHeight);
         batch.draw(menubutton, 50, 900 - 40 - menubutton.getHeight(), menubutton.getWidth(), menubutton.getHeight());
         batch.draw(planet, 346, 193, 215, 215);
+
         catapult.render(batch);
+        for (Bird bird : birds) {
+            bird.render(batch);
+        }
+
+        for (Block block : blocks) {
+            block.render(batch);
+        }
+        for (Pig pig : pigs) {
+            pig.render(batch);
+        }
+        batch.draw(planet2, 950+10+10, 73, 415, 415);
         batch.end();
 
         if (Gdx.input.justTouched()) {

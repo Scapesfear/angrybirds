@@ -20,7 +20,9 @@ ui/font.fnt
 ui/frozepig.png
 ui/grayity.png
 ui/hektor.png
+ui/ice.png
 ui/jupiter.png
+ui/king-pig.png
 ui/layer1.png
 ui/levelbgsand.png
 ui/load.png
@@ -45,7 +47,9 @@ ui/redbird.png
 ui/redplanet.png
 ui/restart.png
 ui/screen.png
+ui/stone.png
 ui/uiskin.atlas
 ui/uiskin.json
 ui/uiskin.png
+ui/wood.png
 ui/world1.png

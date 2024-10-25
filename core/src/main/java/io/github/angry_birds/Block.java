@@ -2,7 +2,6 @@ package io.github.angry_birds;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 
 public class Block {
     // Attributes
@@ -10,15 +9,20 @@ public class Block {
     private float y;
     private int orientationBit;
     private Texture blockTexture;
+    private float scaleX;
+    private float scaleY;
     private float rotationAngle;
 
     // Constructor
-    public Block(float x, float y,float rotationAngle, String texturePath) {
+    public Block(float x, float y,float rotationAngle, String texturePath,float scaleX,float scaleY) {
         this.x = x;
         this.y = y;
         this.orientationBit = orientationBit;
         this.blockTexture = new Texture(texturePath);
         this.rotationAngle = rotationAngle;
+        this.scaleX=scaleX;
+        this.scaleY =scaleY;
+
     }
 
     // Getters and Setters
@@ -50,18 +54,29 @@ public class Block {
 
     public void render(SpriteBatch batch) {
 
-        float textureWidth = blockTexture.getWidth();
-        float textureHeight = blockTexture.getHeight();
 
-        batch.draw(blockTexture,
-            x, y,
-            textureWidth / 2, textureHeight / 2,
-            textureWidth, textureHeight,
-            1, 1,
-            rotationAngle,
-            0, 0,
-            (int) textureWidth, (int) textureHeight,
-            false, false);
+
+        float originX = blockTexture.getWidth() / 2f;
+        float originY = blockTexture.getHeight() / 2f;
+
+        batch.draw(
+            blockTexture,   // Texture to draw
+            x,              // x position
+            y,              // y position
+            originX,        // origin x for rotation and scaling
+            originY,        // origin y for rotation and scaling
+            blockTexture.getWidth(),  // Width of texture
+            blockTexture.getHeight(), // Height of texture
+            scaleX,         // Scaling in x direction
+            scaleY,         // Scaling in y direction
+            rotationAngle,  // Rotation angle
+            0,              // Source x (top-left corner)
+            0,              // Source y (top-left corner)
+            (int) blockTexture.getWidth(),  // Source width
+            (int) blockTexture.getHeight(), // Source height
+            false,          // No flip horizontally
+            false           // No flip vertically
+        );
     }
 
 

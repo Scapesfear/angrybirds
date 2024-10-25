@@ -7,11 +7,15 @@ public class Bird {
     private Texture birdTexture;
     private float x;
     private float y;
+    float textureWidth ;
+    float textureHeight ;
     private float angle;  // Angle for rotation in degrees
 
     // Constructor with angle
-    public Bird(String imagePath, float x, float y, float angle) {
+    public Bird(String imagePath, float x, float y, float angle,float textureHeight,float textureWidth) {
         birdTexture = new Texture(imagePath);
+        this.textureHeight = textureHeight;
+        this.textureWidth = textureWidth;
         this.x = x;
         this.y = y;
         this.angle = angle;
@@ -19,8 +23,8 @@ public class Bird {
 
     // Render method that applies rotation
     public void render(SpriteBatch batch) {
-        float textureWidth = 70;
-        float textureHeight = 70;
+
+
 
         batch.draw(birdTexture,
             x, y,  // Position of the bird
@@ -29,7 +33,7 @@ public class Bird {
             1, 1,  // Scale (no scaling here)
             angle,  // Rotation angle
             0, 0,  // Texture region origin (top-left corner)
-            (int) textureWidth, (int) textureHeight,  // Texture region size
+            (int) birdTexture.getWidth(), (int) birdTexture.getHeight(),  // Texture region size
             false, false);  // Flip flags
     }
 
@@ -41,7 +45,7 @@ public class Bird {
         birdTexture.dispose();
     }
 
-    // Getters and setters for position and angle
+
     public float getX() {
         return x;
     }
