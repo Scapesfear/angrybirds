@@ -12,7 +12,6 @@ ui/chuck.png
 ui/darthmaul.png
 ui/dunes.png
 ui/egg.png
-ui/exit_button.png
 ui/first.jpg
 ui/font-list.fnt
 ui/font-subtitle.fnt
@@ -28,12 +27,13 @@ ui/load.png
 ui/loading.jpg
 ui/menubutton.png
 ui/menuescreen.png
-ui/loading.png
 ui/menu_background.png
 ui/m_screen_background.jpg
 ui/newback.jpeg
+ui/pause.png
 ui/plank.png
 ui/playbutton.png
+ui/play_.png
 ui/play_button.png
 ui/purple1.png
 ui/purple2.png

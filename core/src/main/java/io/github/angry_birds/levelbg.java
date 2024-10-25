@@ -32,12 +32,18 @@ public class levelbg implements Screen {
     private Stage stage;
     private Window window;
     private Texture mainbutton;
+    private Texture play;
 
 
     public levelbg(Main game,Sound asound) {
         this.game = game;
         sound = asound;
         sound.stop();
+        touchPos=new Vector3();
+    }
+    public levelbg(Main game) {
+        this.game = game;
+        sound = Gdx.audio.newSound(Gdx.files.internal("ui/abf.mp3"));;
         touchPos=new Vector3();
     }
 
@@ -48,8 +54,9 @@ public class levelbg implements Screen {
         levelbgsand = new Texture("ui/menu_background.png");
         backbutton = new Texture("ui/backnew.png");
         mainbutton = new Texture("ui/menuescreen.png");
-        menubutton = new Texture("ui/menubutton.png");
+        menubutton = new Texture("ui/pause.png");
         reload=new Texture("ui/restart.png") ;
+        play=new Texture("ui/play_.png");
         camera = new OrthographicCamera();
         viewport = new FitViewport(1600, 900, camera);
         camera.position.set(1600 / 2f, 900 / 2f, 0);
@@ -59,10 +66,8 @@ public class levelbg implements Screen {
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
 
         Window.WindowStyle windowStyle = new Window.WindowStyle();
-        TextureRegionDrawable menuBackground = new TextureRegionDrawable(new TextureRegion(Background));
-        windowStyle.background=menuBackground;
-        BitmapFont font = new BitmapFont();
-        windowStyle.titleFont = font;
+        windowStyle.background= new TextureRegionDrawable(new TextureRegion(Background));
+        windowStyle.titleFont = new BitmapFont();
 
         window=new Window("",windowStyle);
         window.setSize(618,436);
@@ -70,26 +75,39 @@ public class levelbg implements Screen {
         window.setPosition((1600-618) / 2f , (900-436) / 2f);
 
         ImageButton.ImageButtonStyle resumeButtonStyle = new ImageButton.ImageButtonStyle();
-        resumeButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(mainbutton));  // Set the up state image
+        resumeButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(mainbutton));
+        ImageButton.ImageButtonStyle playButtonStyle = new ImageButton.ImageButtonStyle();
+        playButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(play)); // Set the up state image
 
         ImageButton.ImageButtonStyle quitButtonStyle = new ImageButton.ImageButtonStyle();
         quitButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(reload));  // Set the up state image
         ImageButton resumeButton = new ImageButton(resumeButtonStyle);
         ImageButton quitButton = new ImageButton(quitButtonStyle);
+        ImageButton playbutton= new ImageButton(playButtonStyle);
         window.add(resumeButton).pad(10).size(reload.getWidth(), reload.getHeight());
         window.add(quitButton).pad(10);
+        window.add(playbutton).pad(10).size(reload.getWidth(), reload.getHeight());
         resumeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                window.setVisible(false);  // Close the menu on "Resume"
-                Gdx.input.setInputProcessor(null);  // Reset input processor
+                game.setScreen(new MenuScreen(game));
             }
         });
 
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MenuScreen(game));  // Go back to main menu on "Quit"
+                 game.setScreen(new levelbg(game));
+
+            }
+        });
+
+        playbutton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                window.setVisible(false);  // Close the menu on "Resume"
+                Gdx.input.setInputProcessor(null);  // Reset input processor
+
             }
         });
 
