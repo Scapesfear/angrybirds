@@ -78,7 +78,7 @@ public class MenuScreen implements Screen {
     @Override
     public void show() {
         batch = new SpriteBatch();
-        background = new Texture(Gdx.files.internal("ui/menu_background.png"));
+        background = new Texture(Gdx.files.internal("ui/newback.jpeg"));
         layer1 = new Texture(Gdx.files.internal("ui/layer1.png"));
         backbutton = new Texture(Gdx.files.internal("ui/backnew.png"));
         asteroid1 = new Texture(Gdx.files.internal("ui/asteroid1.png"));
@@ -98,7 +98,7 @@ public class MenuScreen implements Screen {
 
         // Set asteroid starting positions
         asteroid1X = -asteroid1.getWidth();  // Start off-screen to the left
-        asteroid1Y = ((screenHeight - asteroid1.getHeight()) / 2) + 100; // Vertically centered
+        asteroid1Y = ((screenHeight - asteroid1.getHeight()) / 2) + 15; // Vertically centered
 
         asteroid2X = -asteroid2.getWidth() - 100;  // Start off-screen to the left
         asteroid2Y = 700; // Vertically centered
@@ -137,12 +137,7 @@ public class MenuScreen implements Screen {
 
         // Draw background
         batch.draw(background, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
-        batch.draw(world1,300f,300f,0.9f*world1.getWidth(),0.9f*world1.getHeight());
-        batch.draw(world2,700f,300f,0.9f*world1.getWidth(),0.9f*world1.getHeight());
-        batch.draw(world3,1100f,300f,0.9f*world1.getWidth(),0.9f*world1.getHeight());
-        batch.draw(worldboundary1,273f,277f,1.1f*world1.getWidth(),1.1f*world1.getHeight());
-        batch.draw(worldboundary1,673f,277f,1.1f*world1.getWidth(),1.1f*world1.getHeight());
-        batch.draw(worldboundary1,1073f,277f,1.1f*world1.getWidth(),1.1f*world1.getHeight());
+
         // Draw layer1 at the bottom
 //        for (int i = 0; i <= screenWidth; i += 350) {
 //            batch.draw(layer1, i, 0, 350, 200);
@@ -164,6 +159,12 @@ public class MenuScreen implements Screen {
             0, 0, asteroid1.getWidth(), asteroid1.getHeight(),
             false, false);
 
+        batch.draw(world1,300f,300f,0.9f*world1.getWidth(),0.9f*world1.getHeight());
+        batch.draw(world2,700f,300f,0.9f*world1.getWidth(),0.9f*world1.getHeight());
+        batch.draw(world3,1100f,300f,0.9f*world1.getWidth(),0.9f*world1.getHeight());
+        batch.draw(worldboundary1,273f,277f,1.1f*world1.getWidth(),1.1f*world1.getHeight());
+        batch.draw(worldboundary1,673f,277f,1.1f*world1.getWidth(),1.1f*world1.getHeight());
+        batch.draw(worldboundary1,1073f,277f,1.1f*world1.getWidth(),1.1f*world1.getHeight());
         // Update and draw asteroid2 (move right, rotate clockwise)
         asteroid2X += asteroid2SpeedX * delta;
         if (asteroid2X > screenWidth) {
@@ -232,22 +233,16 @@ public class MenuScreen implements Screen {
     }
 
     @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height);
-    }
+    public void resize(int width, int height) {viewport.update(width, height);}
 
     @Override
-    public void pause() {
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-    }
+    public void resume() {}
 
     @Override
-    public void hide() {
-        dispose();
-    }
+    public void hide() {dispose();}
 
     @Override
     public void dispose() {
@@ -260,5 +255,9 @@ public class MenuScreen implements Screen {
         layer1.dispose();
         backbutton.dispose();
         asteroid1.dispose();
+        world1.dispose();
+        world2.dispose();
+        world3.dispose();
+        worldboundary1.dispose();
     }
 }

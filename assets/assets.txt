@@ -26,9 +26,13 @@ ui/layer1.png
 ui/levelbgsand.png
 ui/load.png
 ui/loading.jpg
+ui/menubutton.png
+ui/menuescreen.png
 ui/loading.png
 ui/menu_background.png
 ui/m_screen_background.jpg
+ui/newback.jpeg
+ui/plank.png
 ui/playbutton.png
 ui/play_button.png
 ui/purple1.png
@@ -38,6 +42,8 @@ ui/p_screen_background.jpg
 ui/quit3.png
 ui/redbird.png
 ui/redplanet.png
+ui/restart.png
+ui/screen.png
 ui/uiskin.atlas
 ui/uiskin.json
 ui/uiskin.png
