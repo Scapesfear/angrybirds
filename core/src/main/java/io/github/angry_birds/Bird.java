@@ -1,32 +1,47 @@
 package io.github.angry_birds;
 
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Bird {
     private Texture birdTexture;
-
     private float x;
     private float y;
+    private float angle;  // Angle for rotation in degrees
 
-    public Bird(String imagePath, float x, float y) {
+    // Constructor with angle
+    public Bird(String imagePath, float x, float y, float angle) {
         birdTexture = new Texture(imagePath);
-
         this.x = x;
         this.y = y;
+        this.angle = angle;
     }
 
+    // Render method that applies rotation
     public void render(SpriteBatch batch) {
-        batch.begin();
-        batch.draw(birdTexture, x, y);
-        batch.end();
+        float textureWidth = 70;
+        float textureHeight = 70;
+
+        batch.draw(birdTexture,
+            x, y,  // Position of the bird
+            textureWidth / 2, textureHeight / 2,  // Origin point for rotation (center)
+            textureWidth, textureHeight,  // Width and height of the bird
+            1, 1,  // Scale (no scaling here)
+            angle,  // Rotation angle
+            0, 0,  // Texture region origin (top-left corner)
+            (int) textureWidth, (int) textureHeight,  // Texture region size
+            false, false);  // Flip flags
+    }
+
+    public void resize(int width, int height) {
+        // Resize logic if needed
     }
 
     public void dispose() {
         birdTexture.dispose();
     }
 
+    // Getters and setters for position and angle
     public float getX() {
         return x;
     }
@@ -43,12 +58,16 @@ public class Bird {
         this.y = y;
     }
 
-    //launch from the catapult
-    public void launch (int velocity, int x, int y , float angle){
+    public float getAngle() {
+        return angle;
+    }
 
-
+    public void setAngle(float angle) {
+        this.angle = angle;
     }
 
 
+    public void launch(int velocity, int x, int y, float angle) {
 
+    }
 }

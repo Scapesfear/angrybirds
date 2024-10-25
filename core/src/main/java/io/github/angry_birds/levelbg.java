@@ -1,4 +1,5 @@
 package io.github.angry_birds;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
@@ -11,11 +12,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class levelbg implements Screen {
     private final Main game;
@@ -33,18 +39,21 @@ public class levelbg implements Screen {
     private Window window;
     private Texture mainbutton;
     private Texture play;
+    private Texture planet;
+    private Catapult catapult;
+    private List<Bird> birds;
 
-
-    public levelbg(Main game,Sound asound) {
+    public levelbg(Main game, Sound asound) {
         this.game = game;
         sound = asound;
         sound.stop();
-        touchPos=new Vector3();
+        touchPos = new Vector3();
     }
+
     public levelbg(Main game) {
         this.game = game;
-        sound = Gdx.audio.newSound(Gdx.files.internal("ui/abf.mp3"));;
-        touchPos=new Vector3();
+        sound = Gdx.audio.newSound(Gdx.files.internal("ui/abf.mp3"));
+        touchPos = new Vector3();
     }
 
     @Override
@@ -55,38 +64,41 @@ public class levelbg implements Screen {
         backbutton = new Texture("ui/backnew.png");
         mainbutton = new Texture("ui/menuescreen.png");
         menubutton = new Texture("ui/pause.png");
-        reload=new Texture("ui/restart.png") ;
-        play=new Texture("ui/play_.png");
+        reload = new Texture("ui/restart.png");
+        play = new Texture("ui/play_.png");
+        catapult= new Catapult("ui/catapult.png", 400, 400);
+        planet = new Texture("ui/planet.png");
+        birds = new ArrayList<>();
         camera = new OrthographicCamera();
         viewport = new FitViewport(1600, 900, camera);
         camera.position.set(1600 / 2f, 900 / 2f, 0);
         camera.update();
-        stage=new Stage(viewport,batch);
+        stage = new Stage(viewport, batch);
         Gdx.input.setInputProcessor(stage);
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
 
         Window.WindowStyle windowStyle = new Window.WindowStyle();
-        windowStyle.background= new TextureRegionDrawable(new TextureRegion(Background));
+        windowStyle.background = new TextureRegionDrawable(new TextureRegion(Background));
         windowStyle.titleFont = new BitmapFont();
 
-        window=new Window("",windowStyle);
-        window.setSize(618,436);
+        window = new Window("", windowStyle);
+        window.setSize(618, 436);
         window.setVisible(false);
-        window.setPosition((1600-618) / 2f , (900-436) / 2f);
+        window.setPosition((1600 - 618) / 2f, (900 - 436) / 2f);
 
         ImageButton.ImageButtonStyle resumeButtonStyle = new ImageButton.ImageButtonStyle();
         resumeButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(mainbutton));
         ImageButton.ImageButtonStyle playButtonStyle = new ImageButton.ImageButtonStyle();
-        playButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(play)); // Set the up state image
-
+        playButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(play));
         ImageButton.ImageButtonStyle quitButtonStyle = new ImageButton.ImageButtonStyle();
-        quitButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(reload));  // Set the up state image
+        quitButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(reload));
         ImageButton resumeButton = new ImageButton(resumeButtonStyle);
         ImageButton quitButton = new ImageButton(quitButtonStyle);
-        ImageButton playbutton= new ImageButton(playButtonStyle);
+        ImageButton playbutton = new ImageButton(playButtonStyle);
         window.add(resumeButton).pad(10).size(reload.getWidth(), reload.getHeight());
         window.add(quitButton).pad(10);
         window.add(playbutton).pad(10).size(reload.getWidth(), reload.getHeight());
+
         resumeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -97,17 +109,15 @@ public class levelbg implements Screen {
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                 game.setScreen(new levelbg(game));
-
+                game.setScreen(new levelbg(game));
             }
         });
 
         playbutton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                window.setVisible(false);  // Close the menu on "Resume"
-                Gdx.input.setInputProcessor(null);  // Reset input processor
-
+                window.setVisible(false);
+                Gdx.input.setInputProcessor(null);
             }
         });
 
@@ -118,33 +128,47 @@ public class levelbg implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // Print the current mouse coordinates
+        printMouseCoordinates();
+
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
+
         float scaledExitButtonWidth = (float) backbutton.getWidth() / 2;
         float scaledExitButtonHeight = (float) backbutton.getHeight() / 2;
-        batch.draw(levelbgsand,0,0,1790f,viewport.getWorldHeight());
+        batch.draw(levelbgsand, 0, 0, 1790f, viewport.getWorldHeight());
         batch.draw(backbutton, 50, 40, scaledExitButtonWidth, scaledExitButtonHeight);
         batch.draw(menubutton, 50, 900 - 40 - menubutton.getHeight(), menubutton.getWidth(), menubutton.getHeight());
-
+        batch.draw(planet, 346, 193, 215, 215);
+        catapult.render(batch);
         batch.end();
+
         if (Gdx.input.justTouched()) {
             float x = Gdx.input.getX();
             float y = Gdx.input.getY();
             camera.unproject(touchPos.set(x, y, 0f), viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
             if (touchPos.x >= 50 && touchPos.x <= 150 && touchPos.y >= 50 && touchPos.y <= 150) {
-                this.dispose();
                 game.setScreen(new MenuScreen(game));
+                return;
             }
-            if (touchPos.x >= 50 && touchPos.x <= 150 && touchPos.y >= 900-40- menubutton.getHeight() && touchPos.y <= 900-40) {
+            if (touchPos.x >= 50 && touchPos.x <= 150 && touchPos.y >= 900 - 40 - menubutton.getHeight() && touchPos.y <= 900 - 40) {
                 window.setVisible(true);
                 Gdx.input.setInputProcessor(stage);
-
             }
         }
 
         stage.act(delta);
         stage.draw();
+    }
 
+    // Method to print the current mouse coordinates
+    private void printMouseCoordinates() {
+        float mouseX = Gdx.input.getX();
+        float mouseY = Gdx.input.getY();
+        camera.unproject(touchPos.set(mouseX, mouseY, 0f), viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
+
+        System.out.println("Mouse coordinates: x = " + touchPos.x + ", y = " + touchPos.y);
     }
 
     @Override
@@ -160,7 +184,7 @@ public class levelbg implements Screen {
     public void resume() {}
 
     @Override
-    public void hide() {dispose();}
+    public void hide() {}
 
     @Override
     public void dispose() {
@@ -172,7 +196,4 @@ public class levelbg implements Screen {
         Background.dispose();
         stage.dispose();
     }
-
-
-
 }

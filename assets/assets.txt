@@ -31,6 +31,7 @@ ui/menu_background.png
 ui/m_screen_background.jpg
 ui/newback.jpeg
 ui/pause.png
+ui/planet.png
 ui/plank.png
 ui/playbutton.png
 ui/play_.png

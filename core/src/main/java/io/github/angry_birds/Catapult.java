@@ -19,10 +19,8 @@ public class Catapult {
 
 
         public void render(SpriteBatch batch) {
-            batch.begin();
             // Draw the catapult at its specified position
-            batch.draw(catapultTexture, x, y);
-            batch.end();
+            batch.draw(catapultTexture, x, y,75,100);
         }
 
 
