@@ -140,6 +140,3 @@ Once dependencies are installed and the project is built, you can run the game f
 
 4. **Save and Load**:
    - Verify that saved progress can be loaded from the menu screen.
-
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
