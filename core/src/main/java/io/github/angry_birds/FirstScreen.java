@@ -1,5 +1,4 @@
 package io.github.angry_birds;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
@@ -23,7 +22,7 @@ public class FirstScreen implements Screen {
     private OrthographicCamera camera;
     private Viewport viewport;
     private Vector3 touchPos;
-    private  Sound sound;
+    private final Sound sound;
     private static final float WORLD_WIDTH = 1600;
     private static final float WORLD_HEIGHT = 900;
     private Stage stage;
@@ -31,7 +30,7 @@ public class FirstScreen implements Screen {
     public FirstScreen(Main game) {
         this.game = game;
         this.sound = Gdx.audio.newSound(Gdx.files.internal("ui/abf.mp3"));
-        long soundId = sound.play(0.75f);
+        long soundId = sound.play(0.5f);
         sound.setLooping(soundId, true);
 
     }
@@ -43,7 +42,7 @@ public class FirstScreen implements Screen {
     @Override
     public void show() {
         batch = new SpriteBatch();
-        background = new Texture(Gdx.files.internal("ui/egg.png"));
+        background = new Texture(Gdx.files.internal("ui/void.png"));
         playButton = new Texture(Gdx.files.internal("ui/playbutton.png"));
         exitButton = new Texture(Gdx.files.internal("ui/quit3.png"));
         camera = new OrthographicCamera();

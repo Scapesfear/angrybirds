@@ -25,14 +25,17 @@ ui/jupiter.png
 ui/king-pig.png
 ui/layer1.png
 ui/levelbgsand.png
+ui/LevelCleared.png
+ui/Levelfailed.png
 ui/load.png
 ui/loading.jpg
-ui/menubutton.png
+ui/menubutton - Copy.png
 ui/menuescreen.png
 ui/menu_background.png
 ui/m_screen_background.jpg
 ui/newback.jpeg
 ui/pause.png
+ui/pixelcut-export.png
 ui/planet.png
 ui/plank.png
 ui/playbutton.png
@@ -46,10 +49,16 @@ ui/quit3.png
 ui/redbird.png
 ui/redplanet.png
 ui/restart.png
+ui/right.png
 ui/screen.png
+ui/space1.mp3
+ui/spaceship.png
 ui/stone.png
 ui/uiskin.atlas
 ui/uiskin.json
 ui/uiskin.png
+ui/void.png
+ui/window.png
 ui/wood.png
 ui/world1.png
+ui/wrong.png

@@ -1,6 +1,6 @@
 package io.github.angry_birds;
-
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
@@ -13,13 +13,11 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,15 +28,13 @@ public class levelbg implements Screen {
     private Texture menubutton;
     private SpriteBatch batch;
     private OrthographicCamera camera;
-    private Texture backbutton;
-    private Texture reload;
     private Viewport viewport;
     private final Sound sound;
     private final Vector3 touchPos;
     private Stage stage;
     private Window window;
-    private Texture mainbutton;
-    private Texture play;
+    private Window windowwin;
+    private Window windowlose;
     private Texture planet;
     private Catapult catapult;
     private List<Bird> birds;
@@ -47,28 +43,30 @@ public class levelbg implements Screen {
     private List<Pig> pigs;
 
     public levelbg(Main game, Sound asound) {
+        Sound sound1;
         this.game = game;
-        sound = asound;
-        sound.stop();
+        sound1 = asound;
+        sound1.stop();
+        sound1.dispose();
+        sound1 =Gdx.audio.newSound(Gdx.files.internal("ui/space1.mp3"));
+        sound = sound1;
         touchPos = new Vector3();
     }
 
     public levelbg(Main game) {
         this.game = game;
-        sound = Gdx.audio.newSound(Gdx.files.internal("ui/abf.mp3"));
-        touchPos = new Vector3();
-    }
+        sound = Gdx.audio.newSound(Gdx.files.internal("ui/space1.mp3"));
+        touchPos = new Vector3();}
 
     @Override
     public void show() {
         batch = new SpriteBatch();
         Background = new Texture(Gdx.files.internal("ui/screen.png"));
         levelbgsand = new Texture("ui/menu_background.png");
-        backbutton = new Texture("ui/backnew.png");
-        mainbutton = new Texture("ui/menuescreen.png");
+        Texture mainbutton = new Texture("ui/menuescreen.png");
         menubutton = new Texture("ui/pause.png");
-        reload = new Texture("ui/restart.png");
-        play = new Texture("ui/play_.png");
+        Texture reload = new Texture("ui/restart.png");
+        Texture play = new Texture("ui/play_.png");
         catapult= new Catapult("ui/catapult.png", 400, 400);
         planet = new Texture("ui/planet.png");
         planet2 = new Texture("ui/planet.png");
@@ -90,8 +88,6 @@ public class levelbg implements Screen {
         camera.update();
         stage = new Stage(viewport, batch);
         Gdx.input.setInputProcessor(stage);
-        Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
-
         Window.WindowStyle windowStyle = new Window.WindowStyle();
         windowStyle.background = new TextureRegionDrawable(new TextureRegion(Background));
         windowStyle.titleFont = new BitmapFont();
@@ -110,9 +106,9 @@ public class levelbg implements Screen {
         ImageButton resumeButton = new ImageButton(resumeButtonStyle);
         ImageButton quitButton = new ImageButton(quitButtonStyle);
         ImageButton playbutton = new ImageButton(playButtonStyle);
-        window.add(resumeButton).pad(10).size(reload.getWidth(), reload.getHeight());
-        window.add(quitButton).pad(10);
-        window.add(playbutton).pad(10).size(reload.getWidth(), reload.getHeight());
+        window.add(resumeButton).padTop(200).padLeft(20).size(reload.getWidth(), reload.getHeight());
+        window.add(quitButton).padTop(200).padLeft(20);
+        window.add(playbutton).padTop(200).padLeft(20).size(reload.getWidth(), reload.getHeight());
 
         resumeButton.addListener(new ClickListener() {
             @Override
@@ -137,6 +133,95 @@ public class levelbg implements Screen {
         });
 
         stage.addActor(window);
+
+        Texture win = new Texture(Gdx.files.internal("ui/LevelCleared.png"));
+        Window.WindowStyle windowStylewin = new Window.WindowStyle();
+        windowStylewin.background = new TextureRegionDrawable(new TextureRegion(win));
+        windowStylewin.titleFont = new BitmapFont();
+
+        windowwin = new Window("", windowStylewin);
+        windowwin.setSize(500, 900);
+        windowwin.setVisible(false);
+        windowwin.setPosition((1600 - 500) / 2f, (0) / 2f);
+
+        ImageButton resumeButton1 = new ImageButton(resumeButtonStyle);
+        ImageButton quitButton1 = new ImageButton(quitButtonStyle);
+        ImageButton playbutton1 = new ImageButton(playButtonStyle);
+
+        resumeButton1.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new MenuScreen(game));
+            }
+        });
+
+        quitButton1.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new levelbg(game));
+            }
+        });
+
+        playbutton1.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                windowwin.setVisible(false);
+                Gdx.input.setInputProcessor(null);
+            }
+        });
+
+        windowwin.add(resumeButton1).padTop(500).size(reload.getWidth(), reload.getHeight());
+        windowwin.row();
+        windowwin.add(quitButton1).padTop(18);
+        windowwin.row();
+        windowwin.add(playbutton1).padTop(18).size(reload.getWidth(), reload.getHeight());
+        stage.addActor(windowwin);
+
+
+        Texture lose = new Texture(Gdx.files.internal("ui/Levelfailed.png"));
+        Window.WindowStyle windowStylelose = new Window.WindowStyle();
+        windowStylelose.background = new TextureRegionDrawable(new TextureRegion(lose));
+        windowStylelose.titleFont = new BitmapFont();
+
+        windowlose = new Window("", windowStylelose);
+        windowlose.setSize(500, 900);
+        windowlose.setVisible(false);
+        windowlose.setPosition((1600 - 500) / 2f, (0) / 2f);
+
+        ImageButton resumeButton2 = new ImageButton(resumeButtonStyle);
+        ImageButton quitButton2 = new ImageButton(quitButtonStyle);
+        ImageButton playbutton2 = new ImageButton(playButtonStyle);
+
+        resumeButton2.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new MenuScreen(game));
+            }
+        });
+
+        quitButton2.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new levelbg(game));
+            }
+        });
+
+        playbutton2.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                windowlose.setVisible(false);
+                Gdx.input.setInputProcessor(null);
+            }
+        });
+
+        windowlose.add(resumeButton2).padTop(500).size(reload.getWidth(), reload.getHeight());
+        windowlose.row();
+        windowlose.add(quitButton2).padTop(18);
+        windowlose.row();
+        windowlose.add(playbutton2).padTop(18).size(reload.getWidth(), reload.getHeight());
+        stage.addActor(windowlose);
+        long soundId = sound.play(1);
+        sound.setLooping(soundId, true);
     }
 
     @Override
@@ -144,16 +229,10 @@ public class levelbg implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Print the current mouse coordinates
-        printMouseCoordinates();
-
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
-        float scaledExitButtonWidth = (float) backbutton.getWidth() / 2;
-        float scaledExitButtonHeight = (float) backbutton.getHeight() / 2;
         batch.draw(levelbgsand, 0, 0, 1790f, viewport.getWorldHeight());
-        batch.draw(backbutton, 50, 40, scaledExitButtonWidth, scaledExitButtonHeight);
         batch.draw(menubutton, 50, 900 - 40 - menubutton.getHeight(), menubutton.getWidth(), menubutton.getHeight());
         batch.draw(planet, 346, 193, 215, 215);
 
@@ -185,17 +264,19 @@ public class levelbg implements Screen {
             }
         }
 
+        if(Gdx.input.isKeyJustPressed(Input.Keys.W)){
+            windowwin.setVisible(true);
+            Gdx.input.setInputProcessor(stage);
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.L)){
+            windowlose.setVisible(true);
+            Gdx.input.setInputProcessor(stage);
+        }
+
+
         stage.act(delta);
         stage.draw();
-    }
-
-    // Method to print the current mouse coordinates
-    private void printMouseCoordinates() {
-        float mouseX = Gdx.input.getX();
-        float mouseY = Gdx.input.getY();
-        camera.unproject(touchPos.set(mouseX, mouseY, 0f), viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
-
-        System.out.println("Mouse coordinates: x = " + touchPos.x + ", y = " + touchPos.y);
     }
 
     @Override
@@ -211,14 +292,13 @@ public class levelbg implements Screen {
     public void resume() {}
 
     @Override
-    public void hide() {}
+    public void hide() {dispose();}
 
     @Override
     public void dispose() {
         levelbgsand.dispose();
         batch.dispose();
         sound.dispose();
-        backbutton.dispose();
         menubutton.dispose();
         Background.dispose();
         stage.dispose();
