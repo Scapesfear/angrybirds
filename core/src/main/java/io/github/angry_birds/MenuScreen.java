@@ -26,7 +26,6 @@ public class MenuScreen implements Screen {
     private SpriteBatch batch;
     private final ShapeRenderer shapeRenderer;
     private Texture background;
-    private Texture layer1;
     private Texture backbutton;
     private Texture asteroid1;
     private Texture asteroid2;
@@ -51,11 +50,16 @@ public class MenuScreen implements Screen {
     private float asteroid3SpeedX;
     private float asteroid3Rotation;
     private float asteroid3RotationSpeed;
+    private float asteroid4X, asteroid4Y;
+    private float asteroid4SpeedX;
+    private float asteroid4Rotation;
+    private Texture asteroid4;
     private float screenWidth;
     private Texture Background;
     private Texture worldboundary1;
     private Window window;
     private Stage stage;
+    private Texture worldclouds;
 
     public MenuScreen(Main game, Sound sound) {
         this.game = game;
@@ -84,15 +88,16 @@ public class MenuScreen implements Screen {
         batch = new SpriteBatch();
         Background = new Texture(Gdx.files.internal("ui/window.png"));
         background = new Texture(Gdx.files.internal("ui/newback.jpeg"));
-        layer1 = new Texture(Gdx.files.internal("ui/layer1.png"));
         backbutton = new Texture(Gdx.files.internal("ui/backnew.png"));
         asteroid1 = new Texture(Gdx.files.internal("ui/asteroid1.png"));
         asteroid2 = new Texture(Gdx.files.internal("ui/frozepig.png"));
         asteroid3 = new Texture(Gdx.files.internal("ui/asteroid3.png"));
+        asteroid4 = new Texture(Gdx.files.internal("ui/asteroid2.png"));
         world1 = new Texture(Gdx.files.internal("ui/world1.png"));
         world2 = new Texture(Gdx.files.internal("ui/redplanet.png"));
         world3 = new Texture(Gdx.files.internal("ui/jupiter.png"));
         worldboundary1 = new Texture(Gdx.files.internal("ui/grayity.png"));
+        worldclouds = new Texture(Gdx.files.internal("ui/theclouds.png"));
         camera = new OrthographicCamera();
         viewport = new FitViewport(1600, 900, camera);
         camera.position.set(1600 / 2f, 900 / 2f, 0);
@@ -103,16 +108,19 @@ public class MenuScreen implements Screen {
         asteroid2X = -asteroid2.getWidth() - 100;
         asteroid2Y = 700;
         asteroid3X = screenWidth + 200;
-        asteroid3Y = 100;
+        asteroid3Y = 200;
+        asteroid4X = screenWidth + 1600;
+        asteroid4Y = 600;
         asteroid1SpeedX = 15f;
         asteroid2SpeedX = 10f;
         asteroid3SpeedX = 15f;
+        asteroid4SpeedX = 30f;
         asteroid1Rotation = 0f;
-        asteroid1RotationSpeed = 15f;
+        asteroid1RotationSpeed = 0;
         asteroid2Rotation = 360f;
         asteroid2RotationSpeed = 5f;
-        asteroid3Rotation = 180f;
-        asteroid3RotationSpeed = 10f;
+        asteroid3Rotation = 0f;
+        asteroid3RotationSpeed = 0f;
         stage = new Stage(viewport, batch);
         Gdx.input.setInputProcessor(stage);
         Window.WindowStyle windowStyle = new Window.WindowStyle();
@@ -170,12 +178,7 @@ public class MenuScreen implements Screen {
             0.75f, 0.75f, asteroid1Rotation,
             0, 0, asteroid1.getWidth(), asteroid1.getHeight(),
             false, false);
-        batch.draw(world1, 300f, 300f, 0.9f * world1.getWidth(), 0.9f * world1.getHeight());
-        batch.draw(world2, 700f, 300f, 0.9f * world1.getWidth(), 0.9f * world1.getHeight());
-        batch.draw(world3, 1100f, 300f, 0.9f * world1.getWidth(), 0.9f * world1.getHeight());
-        batch.draw(worldboundary1, 273f, 277f, 1.1f * world1.getWidth(), 1.1f * world1.getHeight());
-        batch.draw(worldboundary1, 673f, 277f, 1.1f * world1.getWidth(), 1.1f * world1.getHeight());
-        batch.draw(worldboundary1, 1073f, 277f, 1.1f * world1.getWidth(), 1.1f * world1.getHeight());
+
         asteroid2X += asteroid2SpeedX * delta;
         if (asteroid2X > screenWidth) {
             asteroid2X = -asteroid2.getWidth() - 100;
@@ -197,11 +200,31 @@ public class MenuScreen implements Screen {
         batch.draw(asteroid3, asteroid3X, asteroid3Y,
             (float) asteroid3.getWidth() / 2, (float) asteroid3.getHeight() / 2,
             asteroid3.getWidth(), asteroid3.getHeight(),
-            0.4f, 0.4f, asteroid3Rotation,
+            1f, 1f, asteroid3Rotation,
             0, 0, asteroid3.getWidth(), asteroid3.getHeight(),
+            false, false);
+        asteroid4X -= asteroid4SpeedX * delta;
+        if (asteroid4X < -10) {
+            asteroid4X = screenWidth + 1600;
+        }
+        asteroid4Rotation += 0;
+        if (asteroid4Rotation > 360) asteroid4Rotation -= 360;
+        batch.draw(asteroid4, asteroid4X, asteroid4Y,
+            (float) asteroid4.getWidth() / 2, (float) asteroid4.getHeight() / 2,
+            asteroid4.getWidth(), asteroid4.getHeight(),
+            2f, 2f, asteroid4Rotation,
+            0, 0, asteroid4.getWidth(), asteroid4.getHeight(),
             false, false);
         float scaledExitButtonWidth = (float) backbutton.getWidth() / 2;
         float scaledExitButtonHeight = (float) backbutton.getHeight() / 2;
+//        batch.draw(backbutton, 50, 40, scaledExitButtonWidth, scaledExitButtonHeight);
+        batch.draw(worldclouds, 0, 0,worldclouds.getWidth(),worldclouds.getHeight());
+        batch.draw(world1, 300f, 300f, 0.9f * world1.getWidth(), 0.9f * world1.getHeight());
+        batch.draw(world2, 700f, 300f, 0.9f * world1.getWidth(), 0.9f * world1.getHeight());
+        batch.draw(world3, 1100f, 300f, 0.9f * world1.getWidth(), 0.9f * world1.getHeight());
+        batch.draw(worldboundary1, 273f, 277f, 1.1f * world1.getWidth(), 1.1f * world1.getHeight());
+        batch.draw(worldboundary1, 673f, 277f, 1.1f * world1.getWidth(), 1.1f * world1.getHeight());
+        batch.draw(worldboundary1, 1073f, 277f, 1.1f * world1.getWidth(), 1.1f * world1.getHeight());
         batch.draw(backbutton, 50, 40, scaledExitButtonWidth, scaledExitButtonHeight);
         batch.end();
         if (Gdx.input.justTouched()) {
@@ -255,7 +278,6 @@ public class MenuScreen implements Screen {
         batch.dispose();
         font.dispose();
         background.dispose();
-        layer1.dispose();
         backbutton.dispose();
         asteroid1.dispose();
         world1.dispose();
@@ -263,5 +285,8 @@ public class MenuScreen implements Screen {
         world3.dispose();
         worldboundary1.dispose();
         stage.dispose();
+        worldclouds.dispose();
+        asteroid4.dispose();
+
     }
 }

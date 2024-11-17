@@ -42,7 +42,7 @@ public class FirstScreen implements Screen {
     @Override
     public void show() {
         batch = new SpriteBatch();
-        background = new Texture(Gdx.files.internal("ui/void.png"));
+        background = new Texture(Gdx.files.internal("ui/2063292.jpg"));
         playButton = new Texture(Gdx.files.internal("ui/playbutton.png"));
         exitButton = new Texture(Gdx.files.internal("ui/quit3.png"));
         camera = new OrthographicCamera();

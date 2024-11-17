@@ -9,7 +9,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -41,6 +44,7 @@ public class levelbg implements Screen {
     private Texture planet2;
     private List<Block> blocks;
     private List<Pig> pigs;
+    private World world;
 
     public levelbg(Main game, Sound asound) {
         Sound sound1;
@@ -51,16 +55,20 @@ public class levelbg implements Screen {
         sound1 =Gdx.audio.newSound(Gdx.files.internal("ui/space1.mp3"));
         sound = sound1;
         touchPos = new Vector3();
+        Box2D.init();
     }
 
     public levelbg(Main game) {
         this.game = game;
         sound = Gdx.audio.newSound(Gdx.files.internal("ui/space1.mp3"));
-        touchPos = new Vector3();}
+        touchPos = new Vector3();
+        Box2D.init();
+    }
 
     @Override
     public void show() {
         batch = new SpriteBatch();
+        world = new World(new Vector2(0, -10), true);
         Background = new Texture(Gdx.files.internal("ui/screen.png"));
         levelbgsand = new Texture("ui/menu_background.png");
         Texture mainbutton = new Texture("ui/menuescreen.png");
@@ -277,6 +285,8 @@ public class levelbg implements Screen {
 
         stage.act(delta);
         stage.draw();
+        world.step(1/60f, 6, 2);
+
     }
 
     @Override

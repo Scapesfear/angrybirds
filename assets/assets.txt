@@ -1,4 +1,5 @@
 .gitkeep
+ui/2063292.jpg
 ui/abf.mp3
 ui/alienpig.png
 ui/asteroid1.png
@@ -8,6 +9,7 @@ ui/backnew.png
 ui/back_button.png
 ui/bomb.png
 ui/catapult.png
+ui/catapult2.png
 ui/chuck.png
 ui/darthmaul.png
 ui/dunes.png
@@ -23,7 +25,6 @@ ui/hektor.png
 ui/ice.png
 ui/jupiter.png
 ui/king-pig.png
-ui/layer1.png
 ui/levelbgsand.png
 ui/LevelCleared.png
 ui/Levelfailed.png
@@ -32,7 +33,6 @@ ui/loading.jpg
 ui/menubutton - Copy.png
 ui/menuescreen.png
 ui/menu_background.png
-ui/m_screen_background.jpg
 ui/newback.jpeg
 ui/pause.png
 ui/pixelcut-export.png
@@ -54,10 +54,10 @@ ui/screen.png
 ui/space1.mp3
 ui/spaceship.png
 ui/stone.png
+ui/theclouds.png
 ui/uiskin.atlas
 ui/uiskin.json
 ui/uiskin.png
-ui/void.png
 ui/window.png
 ui/wood.png
 ui/world1.png
