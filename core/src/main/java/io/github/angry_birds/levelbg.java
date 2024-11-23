@@ -1,14 +1,17 @@
 package io.github.angry_birds;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2D;
@@ -40,11 +43,13 @@ public class levelbg implements Screen {
     private Window windowlose;
     private Texture planet;
     private Catapult catapult;
-    private List<Bird> birds;
+    //private List<Bird> birds;
+    private boolean isMouseHeld = false;
     private Texture planet2;
     private List<Block> blocks;
     private List<Pig> pigs;
     private World world;
+    private ShapeRenderer shapeRenderer;
 
     public levelbg(Main game, Sound asound) {
         Sound sound1;
@@ -69,6 +74,7 @@ public class levelbg implements Screen {
     public void show() {
         batch = new SpriteBatch();
         world = new World(new Vector2(0, -10), true);
+
         Background = new Texture(Gdx.files.internal("ui/screen.png"));
         levelbgsand = new Texture("ui/menu_background.png");
         Texture mainbutton = new Texture("ui/menuescreen.png");
@@ -78,10 +84,10 @@ public class levelbg implements Screen {
         catapult= new Catapult("ui/catapult.png", 400, 400);
         planet = new Texture("ui/planet.png");
         planet2 = new Texture("ui/planet.png");
-        birds = new ArrayList<>();
-        birds.add(new RedBird(0, 378, 400,55,55));
-        birds.add(new Chuck(20, 335, 370,55,55));
-        birds.add(new Bomb(55, 293, 315,60,60));
+//        birds = new ArrayList<>();
+//        birds.add(new RedBird(0, 378, 400,55,55));
+//        birds.add(new Chuck(20, 335, 370,55,55));
+//        birds.add(new Bomb(55, 293, 315,60,60));
         blocks = new ArrayList<>();
         blocks.add(new Wood(90, 1170, 530, 1f, 1f));
         blocks.add(new Ice(0, 1170-100.5f+5+1+1, 730-100.5f+10, 1f, 1f));
@@ -230,6 +236,7 @@ public class levelbg implements Screen {
         stage.addActor(windowlose);
         long soundId = sound.play(1);
         sound.setLooping(soundId, true);
+        shapeRenderer = new ShapeRenderer();
     }
 
     @Override
@@ -241,13 +248,13 @@ public class levelbg implements Screen {
         batch.begin();
 
         batch.draw(levelbgsand, 0, 0, 1790f, viewport.getWorldHeight());
+        catapult.render(batch,delta);
         batch.draw(menubutton, 50, 900 - 40 - menubutton.getHeight(), menubutton.getWidth(), menubutton.getHeight());
         batch.draw(planet, 346, 193, 215, 215);
 
-        catapult.render(batch);
-        for (Bird bird : birds) {
-            bird.render(batch);
-        }
+//        for (Bird bird : birds) {
+//            bird.render(batch);
+//        }
 
         for (Block block : blocks) {
             block.render(batch);
@@ -257,21 +264,27 @@ public class levelbg implements Screen {
         }
         batch.draw(planet2, 950+10+10, 73, 415, 415);
         batch.end();
+        float x = Gdx.input.getX();
+        float y = Gdx.input.getY();
+        camera.unproject(touchPos.set(x, y, 0f), viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
 
         if (Gdx.input.justTouched()) {
-            float x = Gdx.input.getX();
-            float y = Gdx.input.getY();
-            camera.unproject(touchPos.set(x, y, 0f), viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
-            if (touchPos.x >= 50 && touchPos.x <= 150 && touchPos.y >= 50 && touchPos.y <= 150) {
-                game.setScreen(new MenuScreen(game));
-                return;
-            }
             if (touchPos.x >= 50 && touchPos.x <= 150 && touchPos.y >= 900 - 40 - menubutton.getHeight() && touchPos.y <= 900 - 40) {
                 window.setVisible(true);
                 Gdx.input.setInputProcessor(stage);
             }
+            if (isinregion(touchPos.x, touchPos.y)) {
+                isMouseHeld = true;
+            }
         }
+        if(Gdx.input.isTouched() && isMouseHeld && isinregion(touchPos.x, touchPos.y)){
+            drawThickLine(413 , 485 , touchPos.x , touchPos.y,4);
+            drawThickLine(459, 485 , touchPos.x , touchPos.y,4 );
 
+        }
+        if(!Gdx.input.isTouched()){
+            isMouseHeld = false;
+        }
         if(Gdx.input.isKeyJustPressed(Input.Keys.W)){
             windowwin.setVisible(true);
             Gdx.input.setInputProcessor(stage);
@@ -281,6 +294,7 @@ public class levelbg implements Screen {
             windowlose.setVisible(true);
             Gdx.input.setInputProcessor(stage);
         }
+
 
 
         stage.act(delta);
@@ -312,5 +326,39 @@ public class levelbg implements Screen {
         menubutton.dispose();
         Background.dispose();
         stage.dispose();
+        shapeRenderer.dispose();
+    }
+
+    public boolean isinregion(float x, float y){
+        if ((x <= 436.0) && (Math.pow(x - 436, 2) + Math.pow(y - 450, 2) < Math.pow(110, 2))) {
+            return true;
+        }
+        else{return false;}
+    }
+    public void drawThickLine(float x1, float y1, float x2, float y2, float thickness) {
+        float dx = x2 - x1;
+        float dy = y2 - y1;
+        float length = (float) Math.sqrt(dx * dx + dy * dy);
+
+        // Calculate the perpendicular direction for thickness
+        float nx = -dy / length;
+        float ny = dx / length;
+
+        // Vertices of the rectangle
+        float px1 = x1 + nx * thickness / 2;
+        float py1 = y1 + ny * thickness / 2;
+        float px2 = x1 - nx * thickness / 2;
+        float py2 = y1 - ny * thickness / 2;
+        float px3 = x2 - nx * thickness / 2;
+        float py3 = y2 - ny * thickness / 2;
+        float px4 = x2 + nx * thickness / 2;
+        float py4 = y2 + ny * thickness / 2;
+
+        // Draw the rectangle
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(0.3f, 0.1f, 0.1f, 1f);
+        shapeRenderer.triangle(px1, py1, px2, py2, px3, py3);
+        shapeRenderer.triangle(px1, py1, px3, py3, px4, py4);
+        shapeRenderer.end();
     }
 }

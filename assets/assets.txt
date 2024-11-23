@@ -10,6 +10,7 @@ ui/back_button.png
 ui/bomb.png
 ui/catapult.png
 ui/catapult2.png
+ui/catapultboundary.png
 ui/chuck.png
 ui/darthmaul.png
 ui/dunes.png

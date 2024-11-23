@@ -9,7 +9,6 @@ public class Lwjgl3Launcher {
         if (StartupHelper.startNewJvmIfRequired()) return;
         createApplication();
     }
-
     private static void createApplication() {
         new Lwjgl3Application(new Main(), getDefaultConfiguration());
     }
