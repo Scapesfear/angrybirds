@@ -110,9 +110,9 @@ public class levelbg implements Screen {
         Texture reload = new Texture("ui/restart.png");
         Texture play = new Texture("ui/play_.png");
         birds = new Stack<>();
-        birds.push(new RedBird( world, shapeRenderer, batch));
-        birds.push(new Chuck( world, shapeRenderer, batch));
-        birds.push(new Bomb( world, shapeRenderer, batch));
+        birds.push(new RedBird( world, shapeRenderer, batch,catapult));
+        birds.push(new Chuck( world, shapeRenderer, batch,catapult));
+        birds.push(new Bomb( world, shapeRenderer, batch,catapult));
 
         //birds.add(new Chuck("ui/chuck.png", world, shapeRenderer, batch));
         //birds.add(new Chuck(20, 335, 370,55,55));
@@ -122,9 +122,9 @@ public class levelbg implements Screen {
         blocks.add(new Ice(0, 1170-100.5f+5+1+1, 730-100.5f+10, 1f, 1f));
         blocks.add(new Stone(90, 1170-201, 530, 1f, 1f));
         pigs = new ArrayList<>();
-        pigs.add(new AlienPig(0, 1170-100.5f+25, 730-100.5f+25, 75f, 75f ));
-        pigs.add(new HektorPorko(0, 1170-201+25+30+25+100+30, 530+25+100, 75f, 75f));
-        pigs.add(new KingPig(0, 1170-201+25+30+30+50+15+5, 530+25+100-180+5, 75f, 75f));
+        pigs.add(new AlienPig( world, shapeRenderer, batch, 1170-201+25+30+30, 530+25+100, 75f));
+        pigs.add(new HektorPorko( world, shapeRenderer, batch, 1170-201+25+30+25+100+30, 530+25+100, 75f));
+        pigs.add(new KingPig( world, shapeRenderer, batch, 1170-201+25+30+30+50+15+5, 530+25+100-180+5, 75f));
         camera = new OrthographicCamera();
         viewport = new FitViewport(1600, 900, camera);
         camera.setToOrtho(false, 1600 / PIXELS_TO_METERS, 900 / PIXELS_TO_METERS);

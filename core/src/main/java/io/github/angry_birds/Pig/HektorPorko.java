@@ -1,8 +1,11 @@
 package io.github.angry_birds.Pig;
 
-public class HektorPorko extends Pig {
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import io.github.angry_birds.CustomWorld;
 
-    public HektorPorko(float angle,float x, float y, float texturewidth, float textureheight) {
-        super("ui/hektor.png", x, y, angle, texturewidth, textureheight);
+public class HektorPorko extends Pig {
+    public HektorPorko( CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch, float x, float y, float angle) {
+        super("ui/hektor.png", world, shapeRenderer, batch, x, y, angle);
     }
 }

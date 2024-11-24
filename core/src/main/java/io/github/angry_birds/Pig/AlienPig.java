@@ -1,8 +1,11 @@
 package io.github.angry_birds.Pig;
 
-public class AlienPig extends Pig {
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import io.github.angry_birds.CustomWorld;
 
-    public AlienPig(float angle,float x, float y,float texturewidth,float textureheight) {
-        super("ui/alienpig.png", x, y, angle,texturewidth,textureheight);
+public class AlienPig extends Pig {
+    public AlienPig( CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch, float x, float y, float angle) {
+        super("ui/alienpig.png", world, shapeRenderer, batch, x, y, angle);
     }
 }

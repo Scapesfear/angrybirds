@@ -2,11 +2,11 @@ package io.github.angry_birds.Bird;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.physics.box2d.World;
+import io.github.angry_birds.Catapult;
 import io.github.angry_birds.CustomWorld;
 
 public class RedBird extends Bird {
-    public RedBird(CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch) {
-        super("ui/redbird.png", world, shapeRenderer, batch);
+    public RedBird(CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch, Catapult catapult) {
+        super("ui/redbird.png", world, shapeRenderer, batch,catapult );
     }
 }

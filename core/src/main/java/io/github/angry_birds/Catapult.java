@@ -15,6 +15,7 @@ public class Catapult extends Actor {
     private Sprite catapultboundary;
     private Sprite newball;
     private float x;
+    public float CatapultAngle;
     private float y;
 
     public Catapult(String imagePath, float x, float y) {
@@ -88,15 +89,19 @@ public class Catapult extends Actor {
         shapeRenderer.end();
     }
 
+    public float getCatapultAngle() {
+        return CatapultAngle;
+    }
+
 
     public void idle(ShapeRenderer shapeRenderer) {
         drawThickLine(413, 485, 459, 485, 5, shapeRenderer);
     }
     public void drawTrajectory(SpriteBatch batch, Vector3 touchPos, float gravity) {
         Vector2 dragDistance = new Vector2(436,485).sub(new Vector2(touchPos.x, touchPos.y));
-        float angle = dragDistance.angleRad();
+        CatapultAngle = dragDistance.angleRad();
         float power = dragDistance.len() * 1.5f;
-        Vector2 launchVelocity = new Vector2(power * (float) Math.cos(angle), power * (float) Math.sin(angle));
+        Vector2 launchVelocity = new Vector2(power * (float) Math.cos(CatapultAngle), power * (float) Math.sin(CatapultAngle));
         float t = 0.4f;
         int pointCount = 22;
         float timeStep = 0.4f;
