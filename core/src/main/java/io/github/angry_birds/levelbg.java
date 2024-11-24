@@ -1,21 +1,16 @@
 package io.github.angry_birds;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Box2D;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -27,12 +22,18 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.github.angry_birds.Catapult.drawThickLine;
+import static io.github.angry_birds.Catapult.isinregion;
+
 public class levelbg implements Screen {
     private final Main game;
-    private Texture Background;
-    private Texture levelbgsand;
-    private Texture menubutton;
-    private SpriteBatch batch;
+    private Body staticCircleBody;
+    private Body staticCircleBody2;
+    private float gravity = -9.8f;
+    private final Texture Background=new Texture(Gdx.files.internal("ui/screen.png"));
+    private final Texture levelbgsand=new Texture("ui/menu_background.png");
+    private final Texture menubutton = new Texture("ui/pause.png");
+    private final SpriteBatch batch=new SpriteBatch();
     private OrthographicCamera camera;
     private Viewport viewport;
     private final Sound sound;
@@ -41,15 +42,17 @@ public class levelbg implements Screen {
     private Window window;
     private Window windowwin;
     private Window windowlose;
-    private Texture planet;
-    private Catapult catapult;
+    private final Catapult catapult=new Catapult("ui/catapult.png", 400, 400);
     //private List<Bird> birds;
+    private boolean isDragging = false;
     private boolean isMouseHeld = false;
-    private Texture planet2;
     private List<Block> blocks;
     private List<Pig> pigs;
-    private World world;
+    private final World world=new World(new Vector2(0, gravity), true);
     private ShapeRenderer shapeRenderer;
+    private final float PIXELS_TO_METERS = 50f;
+    private final Texture circleTexture = new Texture(Gdx.files.internal("ui/planet.png"));
+    private Texture newball=(new Texture(Gdx.files.internal("ui/wood.png")));
 
     public levelbg(Main game, Sound asound) {
         Sound sound1;
@@ -72,18 +75,10 @@ public class levelbg implements Screen {
 
     @Override
     public void show() {
-        batch = new SpriteBatch();
-        world = new World(new Vector2(0, -10), true);
 
-        Background = new Texture(Gdx.files.internal("ui/screen.png"));
-        levelbgsand = new Texture("ui/menu_background.png");
         Texture mainbutton = new Texture("ui/menuescreen.png");
-        menubutton = new Texture("ui/pause.png");
         Texture reload = new Texture("ui/restart.png");
         Texture play = new Texture("ui/play_.png");
-        catapult= new Catapult("ui/catapult.png", 400, 400);
-        planet = new Texture("ui/planet.png");
-        planet2 = new Texture("ui/planet.png");
 //        birds = new ArrayList<>();
 //        birds.add(new RedBird(0, 378, 400,55,55));
 //        birds.add(new Chuck(20, 335, 370,55,55));
@@ -98,6 +93,7 @@ public class levelbg implements Screen {
         pigs.add(new KingPig(0, 1170-201+25+30+30+50+15+5, 530+25+100-180+5, 75f, 75f));
         camera = new OrthographicCamera();
         viewport = new FitViewport(1600, 900, camera);
+        camera.setToOrtho(false, 1600 / PIXELS_TO_METERS, 900 / PIXELS_TO_METERS);
         camera.position.set(1600 / 2f, 900 / 2f, 0);
         camera.update();
         stage = new Stage(viewport, batch);
@@ -237,36 +233,45 @@ public class levelbg implements Screen {
         long soundId = sound.play(1);
         sound.setLooping(soundId, true);
         shapeRenderer = new ShapeRenderer();
+        staticCircleBody = planet(453.5f, 300.5f, 107.5f);
+        staticCircleBody2 = planet(1177.5f, 280.5f, 207.5f);
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        float x = Gdx.input.getX();
+        float y = Gdx.input.getY();
+        camera.unproject(touchPos.set(x, y, 0f), viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
+
         batch.draw(levelbgsand, 0, 0, 1790f, viewport.getWorldHeight());
-        catapult.render(batch,delta);
+        catapult.render(batch,delta,stage,touchPos);
         batch.draw(menubutton, 50, 900 - 40 - menubutton.getHeight(), menubutton.getWidth(), menubutton.getHeight());
-        batch.draw(planet, 346, 193, 215, 215);
+        //catapult.drawTrajectory(batch, touchPos,gravity);
+        batch.draw(circleTexture,
+            staticCircleBody.getPosition().x * PIXELS_TO_METERS - 107.5f,
+            staticCircleBody.getPosition().y * PIXELS_TO_METERS - 107.5f,
+            215, 215);
+        batch.draw(circleTexture,
+            staticCircleBody2.getPosition().x * PIXELS_TO_METERS - 207.5f,
+            staticCircleBody2.getPosition().y * PIXELS_TO_METERS - 207.5f,
+            415, 415);
+
 
 //        for (Bird bird : birds) {
 //            bird.render(batch);
 //        }
-
         for (Block block : blocks) {
             block.render(batch);
         }
         for (Pig pig : pigs) {
             pig.render(batch);
         }
-        batch.draw(planet2, 950+10+10, 73, 415, 415);
-        batch.end();
-        float x = Gdx.input.getX();
-        float y = Gdx.input.getY();
-        camera.unproject(touchPos.set(x, y, 0f), viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
+
 
         if (Gdx.input.justTouched()) {
             if (touchPos.x >= 50 && touchPos.x <= 150 && touchPos.y >= 900 - 40 - menubutton.getHeight() && touchPos.y <= 900 - 40) {
@@ -275,16 +280,32 @@ public class levelbg implements Screen {
             }
             if (isinregion(touchPos.x, touchPos.y)) {
                 isMouseHeld = true;
+                isDragging = true;
             }
         }
+         batch.end();
         if(Gdx.input.isTouched() && isMouseHeld && isinregion(touchPos.x, touchPos.y)){
-            drawThickLine(413 , 485 , touchPos.x , touchPos.y,4);
-            drawThickLine(459, 485 , touchPos.x , touchPos.y,4 );
+            drawThickLine(413 , 485 , touchPos.x , touchPos.y,4,shapeRenderer);
+            drawThickLine(459, 485 , touchPos.x , touchPos.y,4 ,shapeRenderer);
+
+        }
+        if(!isMouseHeld||(!isinregion(touchPos.x, touchPos.y)&&isMouseHeld)){
+            catapult.idle(shapeRenderer);
+        }
+        batch.begin();
+        if(Gdx.input.isTouched() && isMouseHeld && isinregion(touchPos.x, touchPos.y)){
+            catapult.drawTrajectory(batch, touchPos,gravity);
 
         }
         if(!Gdx.input.isTouched()){
             isMouseHeld = false;
+            if(isDragging){
+                isDragging = false;
+
+            }
         }
+
+
         if(Gdx.input.isKeyJustPressed(Input.Keys.W)){
             windowwin.setVisible(true);
             Gdx.input.setInputProcessor(stage);
@@ -294,9 +315,7 @@ public class levelbg implements Screen {
             windowlose.setVisible(true);
             Gdx.input.setInputProcessor(stage);
         }
-
-
-
+        batch.end();
         stage.act(delta);
         stage.draw();
         world.step(1/60f, 6, 2);
@@ -327,38 +346,26 @@ public class levelbg implements Screen {
         Background.dispose();
         stage.dispose();
         shapeRenderer.dispose();
+        circleTexture.dispose();
     }
 
-    public boolean isinregion(float x, float y){
-        if ((x <= 436.0) && (Math.pow(x - 436, 2) + Math.pow(y - 450, 2) < Math.pow(110, 2))) {
-            return true;
-        }
-        else{return false;}
+    public Body planet(float x, float y, float radius) {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(x / PIXELS_TO_METERS, y / PIXELS_TO_METERS);
+        Body body = world.createBody(bodyDef);
+        CircleShape circleShape = new CircleShape();
+        circleShape.setRadius(radius / PIXELS_TO_METERS);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = circleShape;
+        fixtureDef.density = 1f;
+        fixtureDef.friction = 0.5f;
+        fixtureDef.restitution = 0.3f;
+        body.createFixture(fixtureDef);
+        circleShape.dispose();
+        return body;
     }
-    public void drawThickLine(float x1, float y1, float x2, float y2, float thickness) {
-        float dx = x2 - x1;
-        float dy = y2 - y1;
-        float length = (float) Math.sqrt(dx * dx + dy * dy);
 
-        // Calculate the perpendicular direction for thickness
-        float nx = -dy / length;
-        float ny = dx / length;
 
-        // Vertices of the rectangle
-        float px1 = x1 + nx * thickness / 2;
-        float py1 = y1 + ny * thickness / 2;
-        float px2 = x1 - nx * thickness / 2;
-        float py2 = y1 - ny * thickness / 2;
-        float px3 = x2 - nx * thickness / 2;
-        float py3 = y2 - ny * thickness / 2;
-        float px4 = x2 + nx * thickness / 2;
-        float py4 = y2 + ny * thickness / 2;
 
-        // Draw the rectangle
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0.3f, 0.1f, 0.1f, 1f);
-        shapeRenderer.triangle(px1, py1, px2, py2, px3, py3);
-        shapeRenderer.triangle(px1, py1, px3, py3, px4, py4);
-        shapeRenderer.end();
-    }
 }
