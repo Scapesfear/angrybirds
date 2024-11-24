@@ -56,21 +56,9 @@ public class Bird {
             float posY = dynamicFallingBody.getPosition().y * PIXELS_TO_METERS;
 
             batch.draw(birdTexture.getTexture(),
-                posX - 22.5f, // Use local position
-                posY - 22.5f,
-                22.5f,
-                22.5f,
-                45,
-                45,
-                1,
-                1,
-                dynamicFallingBody.getAngle() * (180f / (float)Math.PI),
-                0,
-                0,
-                birdTexture.getRegionWidth(),
-                birdTexture.getRegionHeight(),
-                false,
-                false);
+                dynamicFallingBody.getPosition().x * PIXELS_TO_METERS - 22.5f,
+                dynamicFallingBody.getPosition().y * PIXELS_TO_METERS - 22.5f,
+                45f, 45f);
         }
     }
 
@@ -100,8 +88,8 @@ public class Bird {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circleShape;
         fixtureDef.density = 1f;
-        fixtureDef.friction = 0.5f;
-        fixtureDef.restitution = 0.3f;
+        fixtureDef.friction = 0.1f;
+        fixtureDef.restitution = 0.5f;
         body.createFixture(fixtureDef);
         circleShape.dispose();
         this.dynamicFallingBody = body;
@@ -139,8 +127,28 @@ public class Bird {
     }
 
 
-    public void launch(int velocity, int x, int y, float angle) {
+    public void idle(boolean bool,SpriteBatch batch) {
+        if(bool) {
+            batch.draw(birdTexture.getTexture(),
+                416,
+                465,
+                40, 40);
+        }
+    }
 
+    public boolean isinboundary(){
+        if (dynamicFallingBody.getPosition().x >=1610 || dynamicFallingBody.getPosition().x <=-10||dynamicFallingBody.getPosition().y<=-10) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public boolean stationary(){
+        if (dynamicFallingBody.getLinearVelocity().x == 0 && dynamicFallingBody.getLinearVelocity().y == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean isAlive() {
