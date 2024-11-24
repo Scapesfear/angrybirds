@@ -1,4 +1,4 @@
-package io.github.angry_birds;
+package io.github.angry_birds.Block;
 
 public class Stone extends Block {
 

@@ -1,4 +1,5 @@
-package io.github.angry_birds;
+
+package io.github.angry_birds.Bird;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -28,11 +29,12 @@ public class Bird {
 
     // Render method that applies rotation
     public void renderafterlaunch(SpriteBatch batch) {
-        batch.draw(birdTexture,
-            dynamicFallingBody.getPosition().x * PIXELS_TO_METERS - 22.5f,
-            dynamicFallingBody.getPosition().y * PIXELS_TO_METERS - 22.5f,
-            45, 45);
-        // Flip flags
+        if (dynamicFallingBody != null) {
+            batch.draw(birdTexture,
+                dynamicFallingBody.getPosition().x * PIXELS_TO_METERS - 22.5f,
+                dynamicFallingBody.getPosition().y * PIXELS_TO_METERS - 22.5f,
+                45, 45);
+        }
     }
 
     public void renderbeforelaunch(SpriteBatch batch, Vector3 touchPos) {
@@ -60,6 +62,7 @@ public class Bird {
         body.createFixture(fixtureDef);
         circleShape.dispose();
         this.dynamicFallingBody = body;
+        body.setUserData(this);
         return body;
     }
 

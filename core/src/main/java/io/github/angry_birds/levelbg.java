@@ -6,7 +6,9 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -19,8 +21,26 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import io.github.angry_birds.Bird.Bird;
+//import io.github.angry_birds.Bird.Bomb;
+//import io.github.angry_birds.Bird.Chuck;
+//import io.github.angry_birds.Bird.RedBird;
+//import io.github.angry_birds.Bird.Chuck;
+import io.github.angry_birds.Bird.Bomb;
+import io.github.angry_birds.Bird.Chuck;
+import io.github.angry_birds.Bird.RedBird;
+import io.github.angry_birds.Block.Block;
+import io.github.angry_birds.Block.Ice;
+import io.github.angry_birds.Block.Stone;
+import io.github.angry_birds.Block.Wood;
+import io.github.angry_birds.Pig.AlienPig;
+import io.github.angry_birds.Pig.HektorPorko;
+import io.github.angry_birds.Pig.KingPig;
+import io.github.angry_birds.Pig.Pig;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import static io.github.angry_birds.Catapult.drawThickLine;
 import static io.github.angry_birds.Catapult.isinregion;
@@ -44,13 +64,15 @@ public class levelbg implements Screen {
     private Window windowwin;
     private Window windowlose;
     private final Catapult catapult=new Catapult("ui/catapult.png", 400, 400);
-    private List<Bird> birds;
+    private Stack<Bird> birds;
+    private int bird_idx=0;
     private boolean isDragging = false;
     private boolean isMouseHeld = false;
     private boolean launchactivated = false;
     private boolean launchrender = false;
     private List<Block> blocks;
     private List<Pig> pigs;
+    private boolean isPaused = false;
     private final World world=new World(new Vector2(0, gravity), true);
     private ShapeRenderer shapeRenderer;
     private final float PIXELS_TO_METERS = 50f;
@@ -69,6 +91,10 @@ public class levelbg implements Screen {
         Box2D.init();
     }
 
+
+
+
+
     public levelbg(Main game) {
         this.game = game;
         sound = Gdx.audio.newSound(Gdx.files.internal("ui/space1.mp3"));
@@ -82,8 +108,12 @@ public class levelbg implements Screen {
         Texture mainbutton = new Texture("ui/menuescreen.png");
         Texture reload = new Texture("ui/restart.png");
         Texture play = new Texture("ui/play_.png");
-        birds = new ArrayList<>();
-        birds.add(new Bird("ui/redbird.png", world, shapeRenderer, batch));
+        birds = new Stack<>();
+        birds.push(new RedBird( world, shapeRenderer, batch));
+        birds.push(new Chuck( world, shapeRenderer, batch));
+        birds.push(new Bomb( world, shapeRenderer, batch));
+
+        //birds.add(new Chuck("ui/chuck.png", world, shapeRenderer, batch));
         //birds.add(new Chuck(20, 335, 370,55,55));
         //birds.add(new Bomb(55, 293, 315,60,60));
         blocks = new ArrayList<>();
@@ -242,6 +272,11 @@ public class levelbg implements Screen {
 
     @Override
     public void render(float delta) {
+        if (isPaused){
+            stage.draw();
+            return;
+        }
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         float x = Gdx.input.getX();
@@ -296,26 +331,34 @@ public class levelbg implements Screen {
         batch.begin();
         if(Gdx.input.isTouched() && isMouseHeld && isinregion(touchPos.x, touchPos.y)){
             catapult.drawTrajectory(batch, touchPos,gravity);
-            birds.get(0).renderbeforelaunch(batch, touchPos);
-
+            if (!birds.isEmpty()) {
+                birds.peek().renderbeforelaunch(batch, touchPos);
+            }
         }
         batch.end();
         if(Gdx.input.isTouched() && isMouseHeld && isinregion(touchPos.x, touchPos.y)) {
             drawThickLine(459, 485 , touchPos.x , touchPos.y,6 ,shapeRenderer);
         }
         batch.begin();
-        if(!Gdx.input.isTouched()){
+        if (!Gdx.input.isTouched()) {
             isMouseHeld = false;
-            if(isDragging){
+            if (isDragging && !birds.isEmpty()) {
                 isDragging = false;
-                bird=birds.get(0).createDynamicFallingBody(touchPos);
+                Bird currentBird = birds.pop();
+                bird = currentBird.createDynamicFallingBody(touchPos);
                 bird.setLinearVelocity(catapult.getvelocity(touchPos));
                 bird.setGravityScale(0.5f);
                 launchactivated = true;
             }
         }
-        if(launchactivated){
-            birds.get(0).renderafterlaunch(batch);
+        if (launchactivated && bird != null) {
+            if (bird.getUserData() != null) {
+                ((Bird) bird.getUserData()).renderafterlaunch(batch);
+            }
+            if (birds.isEmpty()) {
+                windowlose.setVisible(true);
+                Gdx.input.setInputProcessor(stage);
+            }
         }
 
 
