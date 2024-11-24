@@ -29,6 +29,7 @@ public class levelbg implements Screen {
     private final Main game;
     private Body staticCircleBody;
     private Body staticCircleBody2;
+    private Body bird;
     private float gravity = -9.8f;
     private final Texture Background=new Texture(Gdx.files.internal("ui/screen.png"));
     private final Texture levelbgsand=new Texture("ui/menu_background.png");
@@ -43,9 +44,11 @@ public class levelbg implements Screen {
     private Window windowwin;
     private Window windowlose;
     private final Catapult catapult=new Catapult("ui/catapult.png", 400, 400);
-    //private List<Bird> birds;
+    private List<Bird> birds;
     private boolean isDragging = false;
     private boolean isMouseHeld = false;
+    private boolean launchactivated = false;
+    private boolean launchrender = false;
     private List<Block> blocks;
     private List<Pig> pigs;
     private final World world=new World(new Vector2(0, gravity), true);
@@ -79,10 +82,10 @@ public class levelbg implements Screen {
         Texture mainbutton = new Texture("ui/menuescreen.png");
         Texture reload = new Texture("ui/restart.png");
         Texture play = new Texture("ui/play_.png");
-//        birds = new ArrayList<>();
-//        birds.add(new RedBird(0, 378, 400,55,55));
-//        birds.add(new Chuck(20, 335, 370,55,55));
-//        birds.add(new Bomb(55, 293, 315,60,60));
+        birds = new ArrayList<>();
+        birds.add(new Bird("ui/redbird.png", world, shapeRenderer, batch));
+        //birds.add(new Chuck(20, 335, 370,55,55));
+        //birds.add(new Bomb(55, 293, 315,60,60));
         blocks = new ArrayList<>();
         blocks.add(new Wood(90, 1170, 530, 1f, 1f));
         blocks.add(new Ice(0, 1170-100.5f+5+1+1, 730-100.5f+10, 1f, 1f));
@@ -284,10 +287,8 @@ public class levelbg implements Screen {
             }
         }
          batch.end();
-        if(Gdx.input.isTouched() && isMouseHeld && isinregion(touchPos.x, touchPos.y)){
-            drawThickLine(413 , 485 , touchPos.x , touchPos.y,4,shapeRenderer);
-            drawThickLine(459, 485 , touchPos.x , touchPos.y,4 ,shapeRenderer);
-
+        if(Gdx.input.isTouched() && isMouseHeld && isinregion(touchPos.x, touchPos.y)) {
+            drawThickLine(413, 485, touchPos.x, touchPos.y, 6, shapeRenderer);
         }
         if(!isMouseHeld||(!isinregion(touchPos.x, touchPos.y)&&isMouseHeld)){
             catapult.idle(shapeRenderer);
@@ -295,14 +296,26 @@ public class levelbg implements Screen {
         batch.begin();
         if(Gdx.input.isTouched() && isMouseHeld && isinregion(touchPos.x, touchPos.y)){
             catapult.drawTrajectory(batch, touchPos,gravity);
+            birds.get(0).renderbeforelaunch(batch, touchPos);
 
         }
+        batch.end();
+        if(Gdx.input.isTouched() && isMouseHeld && isinregion(touchPos.x, touchPos.y)) {
+            drawThickLine(459, 485 , touchPos.x , touchPos.y,6 ,shapeRenderer);
+        }
+        batch.begin();
         if(!Gdx.input.isTouched()){
             isMouseHeld = false;
             if(isDragging){
                 isDragging = false;
-
+                bird=birds.get(0).createDynamicFallingBody(touchPos);
+                bird.setLinearVelocity(catapult.getvelocity(touchPos));
+                bird.setGravityScale(0.5f);
+                launchactivated = true;
             }
+        }
+        if(launchactivated){
+            birds.get(0).renderafterlaunch(batch);
         }
 
 
@@ -347,6 +360,7 @@ public class levelbg implements Screen {
         stage.dispose();
         shapeRenderer.dispose();
         circleTexture.dispose();
+        birds.clear();
     }
 
     public Body planet(float x, float y, float radius) {

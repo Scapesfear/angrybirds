@@ -92,7 +92,7 @@ public class Catapult extends Actor {
     public void idle(ShapeRenderer shapeRenderer) {
         drawThickLine(413, 485, 459, 485, 5, shapeRenderer);
     }
-        public void drawTrajectory(SpriteBatch batch, Vector3 touchPos, float gravity) {
+    public void drawTrajectory(SpriteBatch batch, Vector3 touchPos, float gravity) {
         Vector2 dragDistance = new Vector2(436,485).sub(new Vector2(touchPos.x, touchPos.y));
         float angle = dragDistance.angleRad();
         float power = dragDistance.len() * 1.5f;
@@ -110,5 +110,11 @@ public class Catapult extends Actor {
             t += timeStep;
         }
     }
+    public Vector2 getvelocity(Vector3 touchPos) {
+        Vector2 dragDistance = new Vector2(436,485).sub(new Vector2(touchPos.x, touchPos.y));
+        float angle = dragDistance.angleRad();
+        float power = dragDistance.len() *0.16f;
+        Vector2 launchVelocity = new Vector2(power * (float) Math.cos(angle), power * (float) Math.sin(angle));
+        return launchVelocity;
+    }
 }
-
