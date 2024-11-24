@@ -145,13 +145,13 @@ public class MenuScreen implements Screen {
         Tick.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new levelbg(game,sound));
+                game.setScreen(new levelbg(game,1));
             }
         });
         Notick.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new levelbg(game,sound));
+                game.setScreen(new levelbg(game,1));
             }
         });
 

@@ -51,17 +51,26 @@ public class Bird {
 
     // Render method that applies rotation
     public void renderafterlaunch(SpriteBatch batch) {
-        if (dynamicFallingBody != null) {
+        if (dynamicFallingBody != null && !world.getBodiesToDestroy().contains(dynamicFallingBody)) {
+            float posX = dynamicFallingBody.getPosition().x * PIXELS_TO_METERS;
+            float posY = dynamicFallingBody.getPosition().y * PIXELS_TO_METERS;
+
             batch.draw(birdTexture.getTexture(),
-                dynamicFallingBody.getPosition().x * PIXELS_TO_METERS - 22.5f,
-                dynamicFallingBody.getPosition().y * PIXELS_TO_METERS - 22.5f,
-                22.5f, 22.5f,  // Origin of rotation (center of the sprite)
-                45, 45,  // Width and height
-                1, 1,  // Scale
-                dynamicFallingBody.getAngle() * (180f / (float)Math.PI),  // Rotation angle in degrees
-                0, 0,  // Source X and Y
-                birdTexture.getRegionWidth(), birdTexture.getRegionHeight(),  // Source width and height;
-                false, false); // Flip X and Y
+                posX - 22.5f, // Use local position
+                posY - 22.5f,
+                22.5f,
+                22.5f,
+                45,
+                45,
+                1,
+                1,
+                dynamicFallingBody.getAngle() * (180f / (float)Math.PI),
+                0,
+                0,
+                birdTexture.getRegionWidth(),
+                birdTexture.getRegionHeight(),
+                false,
+                false);
         }
     }
 
@@ -132,5 +141,9 @@ public class Bird {
 
     public void launch(int velocity, int x, int y, float angle) {
 
+    }
+
+    public boolean isAlive() {
+        return maxHits > 0;
     }
 }

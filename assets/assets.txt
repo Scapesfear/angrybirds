@@ -1,4 +1,6 @@
 .gitkeep
+data/level1birds.json
+data/level1pigs.json
 ui/2063292.jpg
 ui/abf.mp3
 ui/alienpig.png
