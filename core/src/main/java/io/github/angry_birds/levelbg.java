@@ -73,7 +73,7 @@ public class levelbg implements Screen {
     private List<Block> blocks;
     private List<Pig> pigs;
     private boolean isPaused = false;
-    private final World world=new World(new Vector2(0, gravity), true);
+    private final CustomWorld world= new CustomWorld(new Vector2(0, -9.8f), true);
     private ShapeRenderer shapeRenderer;
     private final float PIXELS_TO_METERS = 50f;
     private final Texture circleTexture = new Texture(Gdx.files.internal("ui/planet.png"));
@@ -100,6 +100,7 @@ public class levelbg implements Screen {
         sound = Gdx.audio.newSound(Gdx.files.internal("ui/space1.mp3"));
         touchPos = new Vector3();
         Box2D.init();
+        world.getWorld().setContactListener(new GameContactListener());
     }
 
     @Override
@@ -375,7 +376,10 @@ public class levelbg implements Screen {
         stage.act(delta);
         stage.draw();
         world.step(1/60f, 6, 2);
-
+        for (Body body : world.getBodiesToDestroy()) {
+            world.destroyBody(body);
+        }
+        world.getBodiesToDestroy().clear();
     }
 
     @Override

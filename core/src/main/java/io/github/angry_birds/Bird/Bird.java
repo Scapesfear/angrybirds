@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
+import io.github.angry_birds.CustomWorld;
 
 public class Bird {
     private Body dynamicFallingBody;
@@ -17,14 +18,33 @@ public class Bird {
     private float angle;  // Angle for rotation in degrees
     private final float PIXELS_TO_METERS = 50f;
     private SpriteBatch batch;
-    private World world;
+    private CustomWorld world;
+    private int maxHits;
     private ShapeRenderer shapeRenderer;
 
-    public Bird(String imagePath, World world, ShapeRenderer shapeRenderer, SpriteBatch batch) {
+    public Bird(String imagePath, CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch) {
         birdTexture = new Sprite(new Texture(imagePath));
         this.world = world;
         this.shapeRenderer = shapeRenderer;
         this.batch = batch;
+        this.maxHits = 3;
+    }
+
+
+    public int getMaxHits() {
+        return maxHits;
+    }
+
+    public void setMaxHits(int maxHits) {
+        this.maxHits = maxHits;
+    }
+
+    public void decrementHits() {
+        this.maxHits--;
+        if (this.maxHits <= 0) {
+            // Queue the body for destruction
+            world.getBodiesToDestroy().add(dynamicFallingBody);
+        }
     }
 
     // Render method that applies rotation
