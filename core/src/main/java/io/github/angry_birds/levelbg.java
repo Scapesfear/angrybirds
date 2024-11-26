@@ -42,9 +42,9 @@ public class levelbg implements Screen {
     private Body staticCircleBody2;
     private Body bird=null;
     private float gravity = -9.8f;
-    private final Texture Background=new Texture(Gdx.files.internal("ui/screen.png"));
-    private final Texture levelbgsand=new Texture("ui/menu_background.png");
-    private final Texture menubutton = new Texture("ui/pause.png");
+    private final Texture PauseBackground =new Texture(Gdx.files.internal("ui/screen.png"));
+    private final Texture Background =new Texture("ui/menu_background.png");
+    private final Texture Pausebutton = new Texture("ui/pause.png");
     private final SpriteBatch batch=new SpriteBatch();
     private OrthographicCamera camera;
     private Viewport viewport;
@@ -56,13 +56,11 @@ public class levelbg implements Screen {
     private Window windowlose;
     private final Catapult catapult=new Catapult("ui/catapult.png", 400, 400);
     private Stack<Bird> birds;
-    private int bird_idx=0;
     private boolean isDragging = false;
     private boolean isMouseHeld = false;
     private boolean launchactivated = false;
-    private boolean launchrender = false;
-    private List<Block> blocks;
-    private List<Pig> pigs;
+    private ArrayList<Block> blocks;
+    private ArrayList<Pig> pigs;
     private boolean isPaused = false;
     private final CustomWorld world= new CustomWorld(new Vector2(0, -9.8f), true);
     private ShapeRenderer shapeRenderer;
@@ -70,197 +68,67 @@ public class levelbg implements Screen {
     private final Texture circleTexture = new Texture(Gdx.files.internal("ui/planet.png"));
     private Texture newball=(new Texture(Gdx.files.internal("ui/wood.png")));
     private boolean freeze=false;
+    private boolean reset ;
+    private Texture mainmenubutton= new Texture("ui/menuescreen.png");;
+    private Texture reload =new Texture("ui/restart.png");
+    private Texture play= new Texture("ui/play_.png");
 
-    public levelbg(Main game, Sound asound) {
-        Sound sound1;
-        this.game = game;
-        sound1 = asound;
-        sound1.stop();
-        sound1.dispose();
-        sound1 =Gdx.audio.newSound(Gdx.files.internal("ui/space1.mp3"));
-        sound = sound1;
-        touchPos = new Vector3();
-        Box2D.init();
-    }
-    public levelbg(Main game, int level) {
+
+    public levelbg(Main game, int level, boolean reset) {
         this.game = game;
         this.level = level;
         sound = Gdx.audio.newSound(Gdx.files.internal("ui/space1.mp3"));
         touchPos = new Vector3();
         Box2D.init();
-        //world.getWorld().setContactListener(new GameContactListener());
-
+        this.reset = reset;
     }
 
     @Override
     public void show() {
+        shapeRenderer = new ShapeRenderer();
 
-        Texture mainbutton = new Texture("ui/menuescreen.png");
-        Texture reload = new Texture("ui/restart.png");
-        Texture play = new Texture("ui/play_.png");
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, 1600 / PIXELS_TO_METERS, 900 / PIXELS_TO_METERS);
+        camera.position.set(1600 / 2f, 900 / 2f, 0);
+        camera.update();
+
+        viewport = new FitViewport(1600, 900, camera);
+
+        long soundId = sound.play(1);
+        sound.setLooping(soundId, true);
+
+        stage = new Stage(viewport, batch);
+        Gdx.input.setInputProcessor(stage);
+
+        staticCircleBody = planet(453.5f, 300.5f, 107.5f);
+        staticCircleBody2 = planet(1177.5f, 240.5f, 207.5f);
 
         birds = new Stack<>();
-        birds = FileManager.getInstance().loadBirds(world, shapeRenderer, batch, catapult, level);
+        birds = FileManager.getInstance().loadBirds(world, shapeRenderer, batch, catapult, level,reset);
+
+
         blocks = new ArrayList<>();
         blocks.add(new Wood(90, 1170, 530, 1f, 1f));
         blocks.add(new Ice(0, 1170-100.5f+5+1+1, 730-100.5f+10, 1f, 1f));
         blocks.add(new Stone(90, 1170-201, 530, 1f, 1f));
 
+
         pigs = new ArrayList<>();
-        pigs = FileManager.getInstance().loadPigs(world, shapeRenderer, batch, level);
-
-        camera = new OrthographicCamera();
-        viewport = new FitViewport(1600, 900, camera);
-        camera.setToOrtho(false, 1600 / PIXELS_TO_METERS, 900 / PIXELS_TO_METERS);
-        camera.position.set(1600 / 2f, 900 / 2f, 0);
-        camera.update();
-        stage = new Stage(viewport, batch);
-        Gdx.input.setInputProcessor(stage);
-        Window.WindowStyle windowStyle = new Window.WindowStyle();
-        windowStyle.background = new TextureRegionDrawable(new TextureRegion(Background));
-        windowStyle.titleFont = new BitmapFont();
-
-        window = new Window("", windowStyle);
-        window.setSize(618, 436);
-        window.setVisible(false);
-        window.setPosition((1600 - 618) / 2f, (900 - 436) / 2f);
-
-        ImageButton.ImageButtonStyle resumeButtonStyle = new ImageButton.ImageButtonStyle();
-        resumeButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(mainbutton));
-        ImageButton.ImageButtonStyle playButtonStyle = new ImageButton.ImageButtonStyle();
-        playButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(play));
-        ImageButton.ImageButtonStyle quitButtonStyle = new ImageButton.ImageButtonStyle();
-        quitButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(reload));
-        ImageButton resumeButton = new ImageButton(resumeButtonStyle);
-        ImageButton quitButton = new ImageButton(quitButtonStyle);
-        ImageButton playbutton = new ImageButton(playButtonStyle);
-        window.add(resumeButton).padTop(200).padLeft(20).size(reload.getWidth(), reload.getHeight());
-        window.add(quitButton).padTop(200).padLeft(20);
-        window.add(playbutton).padTop(200).padLeft(20).size(reload.getWidth(), reload.getHeight());
-
-        resumeButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MenuScreen(game));
-            }
-        });
-
-        quitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new levelbg(game,level));
-            }
-        });
-
-        playbutton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                window.setVisible(false);
-                Gdx.input.setInputProcessor(null);
-            }
-        });
-
-        stage.addActor(window);
-
-        Texture win = new Texture(Gdx.files.internal("ui/LevelCleared.png"));
-        Window.WindowStyle windowStylewin = new Window.WindowStyle();
-        windowStylewin.background = new TextureRegionDrawable(new TextureRegion(win));
-        windowStylewin.titleFont = new BitmapFont();
-
-        windowwin = new Window("", windowStylewin);
-        windowwin.setSize(500, 900);
-        windowwin.setVisible(false);
-        windowwin.setPosition((1600 - 500) / 2f, (0) / 2f);
-
-        ImageButton resumeButton1 = new ImageButton(resumeButtonStyle);
-        ImageButton quitButton1 = new ImageButton(quitButtonStyle);
-        ImageButton playbutton1 = new ImageButton(playButtonStyle);
-
-        resumeButton1.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MenuScreen(game));
-            }
-        });
-
-        quitButton1.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new levelbg(game,level));
-            }
-        });
-
-        playbutton1.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                windowwin.setVisible(false);
-                Gdx.input.setInputProcessor(null);
-            }
-        });
-
-        windowwin.add(resumeButton1).padTop(500).size(reload.getWidth(), reload.getHeight());
-        windowwin.row();
-        windowwin.add(quitButton1).padTop(18);
-        windowwin.row();
-        windowwin.add(playbutton1).padTop(18).size(reload.getWidth(), reload.getHeight());
-        stage.addActor(windowwin);
+        pigs = FileManager.getInstance().loadPigs(world, shapeRenderer, batch, level,reset);
 
 
-        Texture lose = new Texture(Gdx.files.internal("ui/Levelfailed.png"));
-        Window.WindowStyle windowStylelose = new Window.WindowStyle();
-        windowStylelose.background = new TextureRegionDrawable(new TextureRegion(lose));
-        windowStylelose.titleFont = new BitmapFont();
+        createPauseWindow();
 
-        windowlose = new Window("", windowStylelose);
-        windowlose.setSize(500, 900);
-        windowlose.setVisible(false);
-        windowlose.setPosition((1600 - 500) / 2f, (0) / 2f);
+        createWinWindow();
 
-        ImageButton resumeButton2 = new ImageButton(resumeButtonStyle);
-        ImageButton quitButton2 = new ImageButton(quitButtonStyle);
-        ImageButton playbutton2 = new ImageButton(playButtonStyle);
+        createLoseWindow();
 
-        resumeButton2.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MenuScreen(game));
-            }
-        });
-
-        quitButton2.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new levelbg(game,level));
-            }
-        });
-
-        playbutton2.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                windowlose.setVisible(false);
-                Gdx.input.setInputProcessor(null);
-            }
-        });
-
-        windowlose.add(resumeButton2).padTop(500).size(reload.getWidth(), reload.getHeight());
-        windowlose.row();
-        windowlose.add(quitButton2).padTop(18);
-        windowlose.row();
-        windowlose.add(playbutton2).padTop(18).size(reload.getWidth(), reload.getHeight());
-        stage.addActor(windowlose);
-        long soundId = sound.play(1);
-        sound.setLooping(soundId, true);
-        shapeRenderer = new ShapeRenderer();
-        staticCircleBody = planet(453.5f, 300.5f, 107.5f);
-        staticCircleBody2 = planet(1177.5f, 240.5f, 207.5f);
     }
 
     @Override
     public void render(float delta) {
-        if (isPaused){
-            stage.draw();
-            return;
-        }
+
+
         shapeRenderer.setProjectionMatrix(camera.combined);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -271,9 +139,9 @@ public class levelbg implements Screen {
         batch.begin();
 
 
-        batch.draw(levelbgsand, 0, 0, 1790f, viewport.getWorldHeight());
+        batch.draw(Background, 0, 0, 1790f, viewport.getWorldHeight());
         catapult.render(batch,delta,stage,touchPos);
-        batch.draw(menubutton, 50, 900 - 40 - menubutton.getHeight(), menubutton.getWidth(), menubutton.getHeight());
+        batch.draw(Pausebutton, 50, 900 - 40 - Pausebutton.getHeight(), Pausebutton.getWidth(), Pausebutton.getHeight());
         batch.draw(circleTexture,
             staticCircleBody.getPosition().x * PIXELS_TO_METERS - 107.5f,
             staticCircleBody.getPosition().y * PIXELS_TO_METERS - 107.5f,
@@ -297,7 +165,7 @@ public class levelbg implements Screen {
             freeze=false;
         }
         if (Gdx.input.justTouched()) {
-            if (touchPos.x >= 50 && touchPos.x <= 150 && touchPos.y >= 900 - 40 - menubutton.getHeight() && touchPos.y <= 900 - 40) {
+            if (touchPos.x >= 50 && touchPos.x <= 150 && touchPos.y >= 900 - 40 - Pausebutton.getHeight() && touchPos.y <= 900 - 40) {
                 window.setVisible(true);
                 Gdx.input.setInputProcessor(stage);
             }
@@ -306,7 +174,7 @@ public class levelbg implements Screen {
                 isDragging = true;
             }
         }
-         batch.end();
+        batch.end();
         if(Gdx.input.isTouched() && isMouseHeld && isinregion(touchPos.x, touchPos.y)) {
             drawThickLine(413, 485, touchPos.x, touchPos.y, 6, shapeRenderer);
 
@@ -330,7 +198,7 @@ public class levelbg implements Screen {
         }
         batch.begin();
         if (!Gdx.input.isTouched()&&!freeze&&!isinregion(touchPos.x, touchPos.y)){isDragging=false;
-        isMouseHeld=false;}
+            isMouseHeld=false;}
         if (!Gdx.input.isTouched()&&!freeze&&isinregion(touchPos.x, touchPos.y)&&isMouseHeld) {
             isMouseHeld = false;
             if (isDragging && !birds.isEmpty()) {
@@ -354,7 +222,6 @@ public class levelbg implements Screen {
             Gdx.input.setInputProcessor(stage);
         }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         if(Gdx.input.isKeyJustPressed(Input.Keys.W)){
             windowwin.setVisible(true);
             Gdx.input.setInputProcessor(stage);
@@ -388,11 +255,11 @@ public class levelbg implements Screen {
 
     @Override
     public void dispose() {
-        levelbgsand.dispose();
+        Background.dispose();
         batch.dispose();
         sound.dispose();
-        menubutton.dispose();
-        Background.dispose();
+        Pausebutton.dispose();
+        PauseBackground.dispose();
         stage.dispose();
         shapeRenderer.dispose();
         circleTexture.dispose();
@@ -421,5 +288,158 @@ public class levelbg implements Screen {
     }
 
 
+    private void createPauseWindow (){
+        Window.WindowStyle windowStyle = new Window.WindowStyle();
+        windowStyle.background = new TextureRegionDrawable(new TextureRegion(PauseBackground));
+        windowStyle.titleFont = new BitmapFont();
+
+        window = new Window("", windowStyle);
+        window.setSize(618, 436);
+        window.setVisible(false);
+        window.setPosition((1600 - 618) / 2f, (900 - 436) / 2f);
+
+        ImageButton.ImageButtonStyle menuButtonStyle = new ImageButton.ImageButtonStyle();
+        menuButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(mainmenubutton));
+        ImageButton.ImageButtonStyle playButtonStyle = new ImageButton.ImageButtonStyle();
+        playButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(play));
+        ImageButton.ImageButtonStyle reloadButtonStyle = new ImageButton.ImageButtonStyle();
+        reloadButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(reload));
+
+        ImageButton menuButton = new ImageButton(menuButtonStyle);
+        ImageButton relaodButton = new ImageButton(reloadButtonStyle);
+        ImageButton playbutton = new ImageButton(playButtonStyle);
+
+
+
+        window.add(menuButton).padTop(200).padLeft(20).size(reload.getWidth(), reload.getHeight());
+        window.add(relaodButton).padTop(200).padLeft(20);
+        window.add(playbutton).padTop(200).padLeft(20).size(reload.getWidth(), reload.getHeight());
+
+        menuButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                FileManager.getInstance().saveBirds(birds, level, false);
+                FileManager.getInstance().savePigs(pigs, level, false);
+                // FileManager.getInstance().saveBlocks(blocks, level, false);
+                game.setScreen(new MenuScreen(game));
+
+            }
+        });
+
+        relaodButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new levelbg(game,level,true));
+            }
+        });
+
+        playbutton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                window.setVisible(false);
+                Gdx.input.setInputProcessor(null);
+            }
+        });
+
+        stage.addActor(window);
+    }
+
+
+    private void createWinWindow(){
+        Texture win = new Texture(Gdx.files.internal("ui/LevelCleared.png"));
+        Window.WindowStyle windowStylewin = new Window.WindowStyle();
+        windowStylewin.background = new TextureRegionDrawable(new TextureRegion(win));
+        windowStylewin.titleFont = new BitmapFont();
+
+        windowwin = new Window("", windowStylewin);
+        windowwin.setSize(500, 900);
+        windowwin.setVisible(false);
+        windowwin.setPosition((1600 - 500) / 2f, (0) / 2f);
+
+        ImageButton.ImageButtonStyle menuButtonStyle = new ImageButton.ImageButtonStyle();
+        menuButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(mainmenubutton));
+        ImageButton.ImageButtonStyle playButtonStyle = new ImageButton.ImageButtonStyle();
+        playButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(play));
+        ImageButton.ImageButtonStyle reloadButtonStyle = new ImageButton.ImageButtonStyle();
+        reloadButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(reload));
+
+        ImageButton menuButton = new ImageButton(menuButtonStyle);
+        ImageButton reloadButton = new ImageButton(reloadButtonStyle);
+        ImageButton playbutton = new ImageButton(playButtonStyle);
+
+        menuButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                FileManager.getInstance().saveBirds(birds, level, true);
+                FileManager.getInstance().savePigs(pigs, level, true);
+               // FileManager.getInstance().saveBlocks(blocks, level, true);
+                game.setScreen(new MenuScreen(game));
+            }
+        });
+
+        reloadButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new levelbg(game,level,true));
+            }
+        });
+
+
+
+        windowwin.add(menuButton).padTop(500).size(reload.getWidth(), reload.getHeight());
+        windowwin.row();
+        windowwin.add(reloadButton).padTop(18);
+        windowwin.row();
+        stage.addActor(windowwin);
+    }
+
+
+    private void createLoseWindow(){
+        Texture lose = new Texture(Gdx.files.internal("ui/Levelfailed.png"));
+        Window.WindowStyle windowStylelose = new Window.WindowStyle();
+        windowStylelose.background = new TextureRegionDrawable(new TextureRegion(lose));
+        windowStylelose.titleFont = new BitmapFont();
+
+        windowlose = new Window("", windowStylelose);
+        windowlose.setSize(500, 900);
+        windowlose.setVisible(false);
+        windowlose.setPosition((1600 - 500) / 2f, (0) / 2f);
+
+        ImageButton.ImageButtonStyle menuButtonStyle = new ImageButton.ImageButtonStyle();
+        menuButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(mainmenubutton));
+        ImageButton.ImageButtonStyle playButtonStyle = new ImageButton.ImageButtonStyle();
+        playButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(play));
+        ImageButton.ImageButtonStyle reloadButtonStyle = new ImageButton.ImageButtonStyle();
+        reloadButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(reload));
+
+        ImageButton menuButton = new ImageButton(menuButtonStyle);
+        ImageButton reloadButton = new ImageButton(reloadButtonStyle);
+        ImageButton playButton = new ImageButton(playButtonStyle);
+
+        menuButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                FileManager.getInstance().saveBirds(birds, level, true);
+                FileManager.getInstance().savePigs(pigs, level, true);
+                // FileManager.getInstance().saveBlocks(blocks, level, true);
+                game.setScreen(new MenuScreen(game));
+            }
+        });
+
+        reloadButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new levelbg(game,level,true));
+            }
+        });
+
+
+
+        windowlose.add(menuButton).padTop(500).size(reload.getWidth(), reload.getHeight());
+        windowlose.row();
+        windowlose.add(reloadButton).padTop(18);
+        windowlose.row();
+        stage.addActor(windowlose);
+    }
 
 }

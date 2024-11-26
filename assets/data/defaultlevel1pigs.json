@@ -1,0 +1,25 @@
+[{
+  "type": "AlienPig",
+  "alive": true,
+  "x": 1054,
+    "y": 655,
+    "angle": 75
+
+},
+  {
+    "type": "HektorPorko",
+    "alive": true,
+    "x": 1179,
+    "y": 655,
+    "angle": 75
+
+  },
+  {
+    "type": "KingPig",
+    "alive": true,
+    "x": 1124,
+    "y": 480,
+    "angle": 75
+
+  }
+  ]

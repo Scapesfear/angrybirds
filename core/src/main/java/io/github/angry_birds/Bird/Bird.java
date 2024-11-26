@@ -151,6 +151,14 @@ public class Bird {
         }
     }
 
+    public void renderafterdeath(){
+        //make the bird disappear
+        //make the body disappear
+        dynamicFallingBody.setActive(false);
+        birdTexture.setAlpha(0);
+
+    }
+
     public boolean isAlive() {
         return maxHits > 0;
     }
