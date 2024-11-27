@@ -46,8 +46,8 @@ public class levelbg implements Screen {
     private final float gravity = -9.8f;
     private final Texture Background=new Texture(Gdx.files.internal("ui/screen.png"));
     private final Texture levelbgsand=new Texture("ui/menu_background.png");
-    private final Texture menubutton = new Texture("ui/pause.png");private float gravity = -9.8f;
-    private final Texture PauseBackground =new Texture(Gdx.files.internal("ui/screen.png"));private final Texture Background =new Texture("ui/menu_background.png");
+    private final Texture menubutton = new Texture("ui/pause.png");
+    private final Texture PauseBackground =new Texture(Gdx.files.internal("ui/screen.png"));
     private final Texture Pausebutton = new Texture("ui/pause.png");
     private final SpriteBatch batch=new SpriteBatch();
     private OrthographicCamera camera;
@@ -140,13 +140,13 @@ public class levelbg implements Screen {
 
 
         blocks = new ArrayList<>();
-        blocks.add(new Wood(90, 1170, 530, 1f, 1f));
-        blocks.add(new Ice(0, 1170-100.5f+5+1+1, 730-100.5f+10, 1f, 1f));
-        blocks.add(new Stone(90, 1170-201, 530, 1f, 1f));
+        blocks.add(new Wood(1177, 440, world,shapeRenderer, batch, 0));
+        blocks.add(new Ice(1177, 580, world, shapeRenderer, batch,0));
+        blocks.add(new Stone(1177, 500, world, shapeRenderer, batch,0));
 
 
-        pigs = new ArrayList<>();
-        pigs = FileManager.getInstance().loadPigs(world, shapeRenderer, batch, level,reset);
+//        pigs = new ArrayList<>();
+//        pigs = FileManager.getInstance().loadPigs(world, shapeRenderer, batch, level,reset);
 
 
         createPauseWindow();
@@ -159,10 +159,6 @@ public class levelbg implements Screen {
 
     @Override
     public void render(float delta) {
-        if (isPaused){
-            stage.draw();
-            return;
-        }
         shapeRenderer.setProjectionMatrix(camera.combined);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -375,7 +371,7 @@ public class levelbg implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 FileManager.getInstance().saveBirds(birds, level, false);
-                FileManager.getInstance().savePigs(pigs, level, false);
+                FileManager.getInstance().savePigs((ArrayList<Pig>) pigs, level, false);
                 // FileManager.getInstance().saveBlocks(blocks, level, false);
                 game.setScreen(new MenuScreen(game));
 
@@ -427,7 +423,7 @@ public class levelbg implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 FileManager.getInstance().saveBirds(birds, level, true);
-                FileManager.getInstance().savePigs(pigs, level, true);
+                FileManager.getInstance().savePigs((ArrayList<Pig>) pigs, level, true);
                // FileManager.getInstance().saveBlocks(blocks, level, true);
                 game.setScreen(new MenuScreen(game));
             }
@@ -476,7 +472,7 @@ public class levelbg implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 FileManager.getInstance().saveBirds(birds, level, true);
-                FileManager.getInstance().savePigs(pigs, level, true);
+                FileManager.getInstance().savePigs((ArrayList<Pig>) pigs, level, true);
                 // FileManager.getInstance().saveBlocks(blocks, level, true);
                 game.setScreen(new MenuScreen(game));
             }
@@ -514,4 +510,3 @@ public class levelbg implements Screen {
     }
 
 }
-

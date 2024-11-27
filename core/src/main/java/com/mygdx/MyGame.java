@@ -100,7 +100,7 @@ public class    MyGame implements Screen {
         Texture play = new Texture("ui/newball.png");
 
         birds = new Stack<>();
-        birds = FileManager.getInstance().loadBirds(world, shapeRenderer, batch, catapult, 1);
+        birds = FileManager.getInstance().loadBirds(world, shapeRenderer, batch, catapult, 1,false);
         blocks = new ArrayList<>();
         blocks.add(new Wood(1177, 500, world, shapeRenderer, batch,0));
         blocks.add(new Ice(1177, 600, world, shapeRenderer, batch,45));
