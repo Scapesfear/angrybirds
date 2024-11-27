@@ -9,6 +9,7 @@ import io.github.angry_birds.Bird.Bird;
 import io.github.angry_birds.Bird.RedBird;
 import io.github.angry_birds.Bird.Chuck;
 import io.github.angry_birds.Bird.Bomb;
+import io.github.angry_birds.Block.*;
 import io.github.angry_birds.Pig.AlienPig;
 import io.github.angry_birds.Pig.HektorPorko;
 import io.github.angry_birds.Pig.KingPig;
@@ -99,9 +100,6 @@ public class FileManager {
                 float angle = (float)pigObject.getDouble("angle");
            if (alive) {
                 switch (pigType) {
-                    case "Pig":
-                        pigs.add(new Pig("ui/pig.png", world, shapeRenderer, batch, x, y, angle, "Pig"));
-                        break;
                     case "KingPig":
                         pigs.add(new KingPig(world, shapeRenderer, batch, x, y, angle));
                         break;
@@ -120,51 +118,67 @@ public class FileManager {
         return pigs;
     }
 
-//    public ArrayList<Block> loadBlocks(CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch, int level,boolean  reset) {
-//        ArrayList<Block> blocks = new ArrayList<>();
-//        String filepath;
-//        if (!reset){
-//            filepath = "data/level" + level + "blocks.json";
-//        }
-//        else{
-//            filepath = "data/defaultlevel" + level + "blocks.json";
-//        }
-//        FileHandle fileHandle = Gdx.files.internal(filepath);
-//
-//        try {
-//            String content = fileHandle.readString();
-//            JSONArray jsonArray = new JSONArray(content);
-//
-//            for (int i = 0; i < jsonArray.length(); i++) {
-//                JSONObject blockObject = jsonArray.getJSONObject(i);
-//                String blockType = blockObject.getString("type");
-//                boolean alive = blockObject.getBoolean("alive");
-//                float x = (float)blockObject.getDouble("x");
-//                float y = (float)blockObject.getDouble("y");
-//                float angle = (float)blockObject.getDouble("angle");
-//                if (alive) {
-//                    switch (blockType) {
-//                        case "Block":
-//                            blocks.add(new Block("ui/block.png", world, shapeRenderer, batch, x, y, angle));
-//                            break;
-//                        case "WoodBlock":
-//                            blocks.add(new WoodBlock(world, shapeRenderer, batch, x, y, angle));
-//                            break;
-//                        case "StoneBlock":
-//                            blocks.add(new StoneBlock(world, shapeRenderer, batch, x, y, angle));
-//                            break;
-//                        case "IceBlock":
-//                            blocks.add(new IceBlock(world, shapeRenderer, batch, x, y, angle));
-//                            break;
-//                    }
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        return blocks;
-//    }
+    public ArrayList<Block> loadBlocks(CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch, int level,boolean  reset) {
+        ArrayList<Block> blocks = new ArrayList<>();
+        String filepath;
+        if (!reset){
+            filepath = "data/level" + level + "blocks.json";
+        }
+        else{
+            filepath = "data/defaultlevel" + level + "blocks.json";
+        }
+        FileHandle fileHandle = Gdx.files.internal(filepath);
+
+        try {
+            String content = fileHandle.readString();
+            JSONArray jsonArray = new JSONArray(content);
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject blockObject = jsonArray.getJSONObject(i);
+                String blockType = blockObject.getString("type");
+                boolean alive = blockObject.getBoolean("alive");
+                float x = (float)blockObject.getDouble("x");
+                float y = (float)blockObject.getDouble("y");
+                float angle = (float)blockObject.getDouble("angle");
+                if (alive) {
+                    switch (blockType) {
+                        case "Wood":
+                            blocks.add(new Wood(x, y, world, shapeRenderer, batch, angle));
+                            break;
+                        case "Stone":
+                            blocks.add(new Stone(x, y, world, shapeRenderer, batch, angle));
+                            break;
+                        case "Ice":
+                            blocks.add(new Ice(x, y, world, shapeRenderer, batch, angle));
+                            break;
+                        case "Woodplank":
+                            blocks.add(new Woodplank(x, y, world, shapeRenderer, batch, angle));
+                            break;
+                        case "StonePlank":
+                            blocks.add(new StonePlank(x, y, world, shapeRenderer, batch, angle));
+                            break;
+                        case "IcePlank":
+                            blocks.add(new IcePlank(x, y, world, shapeRenderer, batch, angle));
+                            break;
+                        case "Icehollow":
+                            blocks.add(new Icehollow(x, y, world, shapeRenderer, batch, angle));
+                            break;
+                        case "Stonehollow":
+                            blocks.add(new Stonehollow(x, y, world, shapeRenderer, batch, angle));
+                            break;
+                        default:
+                            System.err.println("Unknown block type: " + blockType);
+                            break;
+                    }
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return blocks;
+    }
 
 
 
@@ -242,42 +256,43 @@ public class FileManager {
         fileHandle.writeString(jsonArray.toString(4), false);
     }
 
-//   public void saveBlock(ArrayList<Block> blocks, int level, boolean reset) {
-//    if (reset) {
-//        try {
-//            // Read default blocks file
-//            String defaultFilepath = "data/defaultlevel" + level + "blocks.json";
-//            FileHandle defaultFileHandle = Gdx.files.local(defaultFilepath);
-//
-//            if (defaultFileHandle.exists()) {
-//                // Copy default file to current level blocks file
-//                String currentFilepath = "data/level" + level + "blocks.json";
-//                FileHandle currentFileHandle = Gdx.files.local(currentFilepath);
-//                defaultFileHandle.copyTo(currentFileHandle);
-//                return; // Exit method after copying default file
-//            }
-//        } catch (Exception e) {
-//            // Log error or handle exception as needed
-//            System.err.println("Error resetting blocks: " + e.getMessage());
-//        }
-//    }
-//
-//    // If not resetting or default file doesn't exist, save current blocks
-//    JSONArray jsonArray = new JSONArray();
-//    for (Block block : blocks) {
-//        JSONObject blockObject = new JSONObject();
-//        blockObject.put("type", block.getClass().getSimpleName());
-//        blockObject.put("alive", true);
-//        blockObject.put("x", block.getX());
-//        blockObject.put("y", block.getY());
-//        blockObject.put("angle", block.getAngle());
-//        jsonArray.put(blockObject);
-//    }
-//
-//    String filepath = "data/level" + level + "blocks.json";
-//    FileHandle fileHandle = Gdx.files.local(filepath);
-//    fileHandle.writeString(jsonArray.toString(4), false);
-//}
+   public void saveBlocks(ArrayList<Block> blocks, int level, boolean reset) {
+    if (reset) {
+        try {
+            // Read default blocks file
+            String defaultFilepath = "data/defaultlevel" + level + "blocks.json";
+            FileHandle defaultFileHandle = Gdx.files.local(defaultFilepath);
+
+            if (defaultFileHandle.exists()) {
+                // Copy default file to current level blocks file
+                String currentFilepath = "data/level" + level + "blocks.json";
+                FileHandle currentFileHandle = Gdx.files.local(currentFilepath);
+                defaultFileHandle.copyTo(currentFileHandle);
+                return; // Exit method after copying default file
+            }
+        } catch (Exception e) {
+            // Log error or handle exception as needed
+            System.err.println("Error resetting blocks: " + e.getMessage());
+        }
+    }
+
+    // If not resetting or default file doesn't exist, save current blocks
+    JSONArray jsonArray = new JSONArray();
+    for (Block block : blocks) {
+        JSONObject blockObject = new JSONObject();
+        blockObject.put("type", block.getClass().getSimpleName());
+        blockObject.put("alive", true);
+        blockObject.put("x", block.getX());
+        blockObject.put("y", block.getY());
+        blockObject.put("angle", block.getDynamicFallingBody().getAngle());
+        jsonArray.put(blockObject);
+    }
+
+    String filepath = "data/level" + level + "blocks.json";
+    FileHandle fileHandle = Gdx.files.local(filepath);
+    fileHandle.writeString(jsonArray.toString(4), false);
+}
+
 
 
 }

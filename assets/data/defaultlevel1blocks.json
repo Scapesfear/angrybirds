@@ -1,0 +1,72 @@
+[
+  {
+    "type": "Wood",
+    "alive": true,
+    "x": 1116,
+    "y": 453,
+    "angle": 0
+  },
+  {
+    "type": "IcePlank",
+    "alive": true,
+    "x": 1166,
+    "y": 550,
+    "angle": 0
+  },
+  {
+    "type": "Stone",
+    "alive": true,
+    "x": 1116,
+    "y": 495,
+    "angle": 0
+  },
+  {
+    "type": "Wood",
+    "alive": true,
+    "x": 1236,
+    "y": 450,
+    "angle": 0
+  },
+  {
+    "type": "Stone",
+    "alive": true,
+    "x": 1236,
+    "y": 495,
+    "angle": 0
+  },
+  {
+    "type": "Icehollow",
+    "alive": true,
+    "x": 1220,
+    "y": 560,
+    "angle": 0
+  },
+  {
+    "type": "Stonehollow",
+    "alive": true,
+    "x": 1220,
+    "y": 590,
+    "angle": 0
+  },
+  {
+    "type": "Stonehollow",
+    "alive": true,
+    "x": 1110,
+    "y": 590,
+    "angle": 0
+  },
+  {
+    "type": "Icehollow",
+    "alive": true,
+    "x": 1110,
+    "y": 660,
+    "angle": 0
+  },
+  {
+    "type": "Woodplank",
+    "alive": true,
+    "x": 1156,
+    "y": 670,
+    "angle": 0
+  }
+]

@@ -29,6 +29,10 @@ public class FirstScreen implements Screen {
 
     public FirstScreen(Main game) {
         this.game = game;
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(1600, 900, camera);
+        camera.position.set(1600 / 2f, 900 / 2f, 0);
+        camera.update();
         this.sound = Gdx.audio.newSound(Gdx.files.internal("ui/abf.mp3"));
         long soundId = sound.play(0.5f);
         sound.setLooping(soundId, true);
@@ -117,7 +121,7 @@ public class FirstScreen implements Screen {
     public void resume() {}
 
     @Override
-    public void hide() {dispose();}
+    public void hide() {}
 
     @Override
     public void dispose() {

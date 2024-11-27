@@ -1,0 +1,72 @@
+[
+    {
+        "alive": true,
+        "x": 1035.5732,
+        "y": 416.6758,
+        "angle": -2.1236535E-4,
+        "type": "Wood"
+    },
+    {
+        "alive": true,
+        "x": 1073.5519,
+        "y": 504.6294,
+        "angle": -7.605936E-4,
+        "type": "IcePlank"
+    },
+    {
+        "alive": true,
+        "x": 1034.9917,
+        "y": 467.4129,
+        "angle": -5.9334695E-4,
+        "type": "Stone"
+    },
+    {
+        "alive": true,
+        "x": 1180.4288,
+        "y": 416.85495,
+        "angle": 0.009777077,
+        "type": "Wood"
+    },
+    {
+        "alive": true,
+        "x": 1156.396,
+        "y": 467.32172,
+        "angle": 0.011495571,
+        "type": "Stone"
+    },
+    {
+        "alive": true,
+        "x": 1134.3657,
+        "y": 541.80707,
+        "angle": -0.0012715219,
+        "type": "Icehollow"
+    },
+    {
+        "alive": true,
+        "x": 1138.0331,
+        "y": 592.5401,
+        "angle": -0.0014210009,
+        "type": "Stonehollow"
+    },
+    {
+        "alive": true,
+        "x": 1056.5618,
+        "y": 541.89014,
+        "angle": -7.700733E-4,
+        "type": "Stonehollow"
+    },
+    {
+        "alive": true,
+        "x": 1027.7219,
+        "y": 592.657,
+        "angle": 3.933077E-4,
+        "type": "Icehollow"
+    },
+    {
+        "alive": true,
+        "x": 1072.9785,
+        "y": 629.8928,
+        "angle": -0.00116273,
+        "type": "Woodplank"
+    }
+]

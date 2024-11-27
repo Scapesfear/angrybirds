@@ -24,10 +24,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.BodyEditorLoader;
 import io.github.angry_birds.Bird.Bird;
-import io.github.angry_birds.Block.Block;
-import io.github.angry_birds.Block.Ice;
-import io.github.angry_birds.Block.Stone;
-import io.github.angry_birds.Block.Wood;
+import io.github.angry_birds.Block.*;
+import io.github.angry_birds.Pig.AlienPig;
+import io.github.angry_birds.Pig.KingPig;
 import io.github.angry_birds.Pig.Pig;
 
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ import static io.github.angry_birds.Catapult.drawThickLine;
 import static io.github.angry_birds.Catapult.isinregion;
 
 public class levelbg implements Screen {
-    private int level;
+    private final int level;
     private final Main game;
     private Body staticCircleBody;
     private Body staticCircleBody2;
@@ -80,9 +79,9 @@ public class levelbg implements Screen {
     private final Texture land1= new Texture("ui/land1.png");
     private final Texture land2= new Texture("ui/land2.png");
     private boolean reset ;
-    private Texture mainmenubutton= new Texture("ui/menuescreen.png");;
-    private Texture reload =new Texture("ui/restart.png");
-    private Texture play= new Texture("ui/play_.png");
+    private final Texture mainmenubutton= new Texture("ui/menuescreen.png");;
+    private final Texture reload =new Texture("ui/restart.png");
+    private final Texture play= new Texture("ui/play_.png");
 
     public levelbg(Main game,int level, boolean reset, Sound asound) {
 
@@ -136,14 +135,14 @@ public class levelbg implements Screen {
 
 
         blocks = new ArrayList<>();
-        blocks.add(new Wood(1177, 440, world,shapeRenderer, batch, 0));
-        blocks.add(new Ice(1177, 580, world, shapeRenderer, batch,0));
-        blocks.add(new Stone(1177, 500, world, shapeRenderer, batch,0));
+         blocks = FileManager.getInstance().loadBlocks(world, shapeRenderer, batch, level,reset);
+
+
+
 
 
         pigs = new ArrayList<>();
         pigs = FileManager.getInstance().loadPigs(world, shapeRenderer, batch, level,reset);
-
 
         createPauseWindow();
 
@@ -366,6 +365,7 @@ public class levelbg implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 FileManager.getInstance().saveBirds(birds, level, false);
                 FileManager.getInstance().savePigs((ArrayList<Pig>) pigs, level, false);
+                FileManager.getInstance().saveBlocks((ArrayList<Block>) blocks, level, false);
                 // FileManager.getInstance().saveBlocks(blocks, level, false);
                 game.setScreen(new MenuScreen(game));
 
@@ -418,7 +418,7 @@ public class levelbg implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 FileManager.getInstance().saveBirds(birds, level, true);
                 FileManager.getInstance().savePigs((ArrayList<Pig>) pigs, level, true);
-               // FileManager.getInstance().saveBlocks(blocks, level, true);
+               FileManager.getInstance().saveBlocks((ArrayList<Block>) blocks, level, true);
                 game.setScreen(new MenuScreen(game));
             }
         });
@@ -467,7 +467,7 @@ public class levelbg implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 FileManager.getInstance().saveBirds(birds, level, true);
                 FileManager.getInstance().savePigs((ArrayList<Pig>) pigs, level, true);
-                // FileManager.getInstance().saveBlocks(blocks, level, true);
+                 FileManager.getInstance().saveBlocks((ArrayList<Block>) blocks, level, true);
                 game.setScreen(new MenuScreen(game));
             }
         });

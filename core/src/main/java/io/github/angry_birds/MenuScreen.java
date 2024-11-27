@@ -62,7 +62,9 @@ public class MenuScreen implements Screen {
     private Texture worldclouds;
     private int level;
 
+
     public MenuScreen(Main game, Sound sound) {
+        this.level= 1;
         this.game = game;
         this.sound = sound;
         shapeRenderer = new ShapeRenderer();
@@ -73,9 +75,10 @@ public class MenuScreen implements Screen {
     }
 
     public MenuScreen(Main game) {
+        this.level= 1;
         this.game = game;
         this.sound = Gdx.audio.newSound(Gdx.files.internal("ui/abf.mp3"));
-        long soundId = sound.play(0.1f);
+        long soundId = sound.play(0.5f);
         sound.setLooping(soundId, true);
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
@@ -143,16 +146,20 @@ public class MenuScreen implements Screen {
 
         window.add(Tick).padTop(150).padLeft(10);
         window.add(Notick).padTop(150).padLeft(50);
+
         Tick.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new levelbg(game,1,false,sound));
+                System.out.println("Tick clicked - Level: " + level);
+                game.setScreen(new levelbg(game, level, false));
             }
         });
+
         Notick.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new levelbg(game,1,true,sound));
+                System.out.println("Notick clicked - Level: " + level);
+                game.setScreen(new levelbg(game, level, true));
             }
         });
 
@@ -228,30 +235,30 @@ public class MenuScreen implements Screen {
         batch.draw(worldboundary1, 1073f, 277f, 1.1f * world1.getWidth(), 1.1f * world1.getHeight());
         batch.draw(backbutton, 50, 40, scaledExitButtonWidth, scaledExitButtonHeight);
         batch.end();
+        System.out.println("Current level before touch: " + level);
         if (Gdx.input.justTouched()) {
             float x = Gdx.input.getX();
             float y = Gdx.input.getY();
             camera.unproject(touchPos.set(x, y, 0f), viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
-            if (touchPos.x >= 50 && touchPos.x <= 150 && touchPos.y >= 50 && touchPos.y <= 150) {
-                game.setScreen(new FirstScreen(game,sound));
-            }
-            if (touchPos.x >= 737 && touchPos.x <= 900 && touchPos.y >= 337 && touchPos.y <= 500) {
-                level=2;
-                window.setVisible(true);
-                Gdx.input.setInputProcessor(stage);
-            }
-            if (touchPos.x >= 1137 && touchPos.x <= 1300 && touchPos.y >= 337 && touchPos.y <= 500) {
-                level=3;
-                window.setVisible(true);
-                Gdx.input.setInputProcessor(stage);
-            }
-            if (touchPos.x >= 337 && touchPos.x <= 500 && touchPos.y >= 337 && touchPos.y <= 500) {
-                window.setVisible(true);
-                level=1;
-                Gdx.input.setInputProcessor(stage);
-            }
 
-
+            // Only process level selection if the window is NOT visible
+            if (!window.isVisible()) {
+                if (touchPos.x >= 337 && touchPos.x <= 500 && touchPos.y >= 337 && touchPos.y <= 500) {
+                    this.level = 1;
+                    window.setVisible(true);
+                    Gdx.input.setInputProcessor(stage);
+                }
+                else if (touchPos.x >= 737 && touchPos.x <= 900 && touchPos.y >= 337 && touchPos.y <= 500) {
+                    this.level = 2;
+                    window.setVisible(true);
+                    Gdx.input.setInputProcessor(stage);
+                }
+                else if (touchPos.x >= 1137 && touchPos.x <= 1300 && touchPos.y >= 337 && touchPos.y <= 500) {
+                    this.level = 3;
+                    window.setVisible(true);
+                    Gdx.input.setInputProcessor(stage);
+                }
+            }
         }
         stage.act(delta);
         stage.draw();

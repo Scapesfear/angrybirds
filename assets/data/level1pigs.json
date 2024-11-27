@@ -1,22 +1,22 @@
 [
     {
         "alive": true,
-        "x": 1054,
-        "y": 655,
+        "x": 1077.8506,
+        "y": 641.3606,
         "angle": 75,
         "type": "AlienPig"
     },
     {
         "alive": true,
-        "x": 1179,
-        "y": 655,
+        "x": 1261.1492,
+        "y": 444.94577,
         "angle": 75,
         "type": "HektorPorko"
     },
     {
         "alive": true,
-        "x": 1124,
-        "y": 480,
+        "x": 1143.8268,
+        "y": 422.05658,
         "angle": 75,
         "type": "KingPig"
     }

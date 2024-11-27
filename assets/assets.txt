@@ -18,12 +18,19 @@ data/level2pigs.json
 data/level3birds.json
 data/level3blocks.json
 data/level3pigs.json
+data/LevelMatrix.json
 data/load1.json
 data/load2.json
 data/pigs.json
+game-1.dat
+hs_err_pid11188.log
+hs_err_pid23072.log
+hs_err_pid26776.log
+hs_err_pid29444.log
 ui/2063292.jpg
 ui/abf.mp3
 ui/alienpig.png
+ui/Angry Birds.plantuml
 ui/asteroid1.png
 ui/asteroid2.png
 ui/asteroid3.png

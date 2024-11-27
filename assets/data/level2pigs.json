@@ -1,0 +1,16 @@
+[
+    {
+        "alive": true,
+        "x": 1017.7101,
+        "y": 390.80423,
+        "angle": 0,
+        "type": "AlienPig"
+    },
+    {
+        "alive": true,
+        "x": 1163.2966,
+        "y": 395.0419,
+        "angle": 0,
+        "type": "AlienPig"
+    }
+]

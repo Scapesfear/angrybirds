@@ -1,7 +1,7 @@
 [
     {
         "alive": true,
-        "type": "Chuck"
+        "type": "RedBird"
     },
     {
         "alive": true,
@@ -9,7 +9,11 @@
     },
     {
         "alive": true,
-        "type": "Chuck"
+        "type": "Bomb"
+    },
+    {
+        "alive": true,
+        "type": "RedBird"
     },
     {
         "alive": true,

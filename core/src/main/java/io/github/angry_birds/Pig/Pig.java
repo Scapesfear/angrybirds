@@ -48,6 +48,10 @@ public class Pig {
         this.maxHits = maxHits;
     }
 
+    public Body getDynamicFallingBody() {
+        return dynamicFallingBody;
+    }
+
     public void decrementHits() {
         this.maxHits--;
         if (this.maxHits <= 0) {
@@ -55,6 +59,9 @@ public class Pig {
             world.getBodiesToDestroy().add(dynamicFallingBody);
         }
     }
+
+
+    // Render method that applies rotation
     public void render(SpriteBatch batch) {
         if (dynamicFallingBody != null && !world.getBodiesToDestroy().contains(dynamicFallingBody)) {
             Vector2 bottlePos = dynamicFallingBody.getPosition().sub(origin);
@@ -91,7 +98,7 @@ public class Pig {
     }
 
     public float getX() {
-        return x;
+       return dynamicFallingBody.getPosition().x * PIXELS_TO_METERS - 20.5f;
     }
 
     public void setX(float x) {
@@ -99,7 +106,7 @@ public class Pig {
     }
 
     public float getY() {
-        return y;
+        return dynamicFallingBody.getPosition().y * PIXELS_TO_METERS - 20.5f;
     }
 
     public void setY(float y) {

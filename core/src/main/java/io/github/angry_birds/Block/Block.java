@@ -46,7 +46,7 @@ public class Block {
     }
 
     public float getX() {
-        return x;
+       return dynamicFallingBody.getPosition().x * PIXELS_TO_METERS- 20.5f;
     }
 
     public void setX(float x) {
@@ -54,11 +54,15 @@ public class Block {
     }
 
     public float getY() {
-        return y;
+        return dynamicFallingBody.getPosition().y * PIXELS_TO_METERS- 20.5f;
     }
 
     public void setY(float y) {
         this.y = y;
+    }
+
+    public Body getDynamicFallingBody() {
+        return dynamicFallingBody;
     }
 
     public void render(SpriteBatch batch) {
@@ -85,7 +89,7 @@ public class Block {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = rectangle;
         fixtureDef.density = density;
-        fixtureDef.friction = 0.3f;
+        fixtureDef.friction = 0.5f;
         fixtureDef.restitution = 0.2f;
         body.createFixture(fixtureDef);
         rectangle.dispose() ;
@@ -98,4 +102,7 @@ public class Block {
         }
     }
 
+    public float getAngle() {
+        return rotationAngle;
+    }
 }

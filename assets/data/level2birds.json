@@ -1,0 +1,10 @@
+[
+    {
+        "alive": true,
+        "type": "RedBird"
+    },
+    {
+        "alive": true,
+        "type": "Bomb"
+    }
+]
