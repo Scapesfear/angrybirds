@@ -84,7 +84,7 @@ public class levelbg implements Screen {
     private Texture reload =new Texture("ui/restart.png");
     private Texture play= new Texture("ui/play_.png");
 
-    public levelbg(Main game, Sound asound) {
+    public levelbg(Main game,int level, boolean reset, Sound asound) {
 
         Sound sound1;
         this.game = game;
@@ -94,6 +94,8 @@ public class levelbg implements Screen {
         sound1 =Gdx.audio.newSound(Gdx.files.internal("ui/space1.mp3"));
         sound = sound1;
         touchPos = new Vector3();
+        this.level=level;
+        this.reset=reset;
         Box2D.init();
     }
 
@@ -108,12 +110,6 @@ public class levelbg implements Screen {
 
     @Override
     public void show() {
-        Texture mainbutton = new Texture("ui/menuescreen.png");
-        Texture reload = new Texture("ui/restart.png");
-        Texture play = new Texture("ui/play_.png");
-
-//        pigs = new ArrayList<>();
-        //pigs = FileManager.getInstance().loadPigs(world, shapeRenderer, batch, level);
         shapeRenderer = new ShapeRenderer();
 
         camera = new OrthographicCamera();
@@ -145,8 +141,8 @@ public class levelbg implements Screen {
         blocks.add(new Stone(1177, 500, world, shapeRenderer, batch,0));
 
 
-//        pigs = new ArrayList<>();
-//        pigs = FileManager.getInstance().loadPigs(world, shapeRenderer, batch, level,reset);
+        pigs = new ArrayList<>();
+        pigs = FileManager.getInstance().loadPigs(world, shapeRenderer, batch, level,reset);
 
 
         createPauseWindow();
@@ -184,9 +180,9 @@ public class levelbg implements Screen {
         for (Block block : blocks) {
             block.render(batch);
         }
-//        for (Pig pig : pigs) {
-//            pig.render(batch);
-//        }
+        for (Pig pig : pigs) {
+            pig.render(batch);
+        }
 
 
         if(bird!=null&&(((Bird) bird.getUserData()).isinboundary()||((Bird) bird.getUserData()).stationary())){

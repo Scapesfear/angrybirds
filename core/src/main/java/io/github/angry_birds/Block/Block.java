@@ -27,6 +27,7 @@ public class Block {
     private ShapeRenderer shapeRenderer;
     private SpriteBatch batch;
     private float health;
+    private float isalive;
     private float density ;
     public Block(float x, float y, String texturePath, CustomWorld world, SpriteBatch batch, ShapeRenderer shapeRenderer, float health,float density,float width, float height ,float rotationAngle) {
         this.x = x;

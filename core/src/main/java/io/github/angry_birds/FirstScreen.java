@@ -93,7 +93,7 @@ public class FirstScreen implements Screen {
             // Check for play button press
             if (touchPos.x > playButtonX+40 && touchPos.x < playButtonX + scaledPlayButtonWidth -40
                 && touchPos.y > playButtonY+10 && touchPos.y < playButtonY + scaledPlayButtonHeight-10) {
-                game.setScreen(new MenuScreen(game));
+                game.setScreen(new MenuScreen(game,sound));
             }
 
             // Check for quit button press (adjust Y position for letterboxing)

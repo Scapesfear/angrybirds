@@ -53,10 +53,10 @@ public class Pig {
     public void render(SpriteBatch batch) {
         if (dynamicFallingBody != null) {
             batch.draw(pigTexture.getTexture(),
-                dynamicFallingBody.getPosition().x * PIXELS_TO_METERS - 25f,
-                dynamicFallingBody.getPosition().y * PIXELS_TO_METERS - 25f,
-                25f, 25f,  // Origin of rotation (center of the sprite)
-                50f, 50f,  // Width and height
+                dynamicFallingBody.getPosition().x * PIXELS_TO_METERS - 22.5f,
+                dynamicFallingBody.getPosition().y * PIXELS_TO_METERS - 22.5f,
+                22.5f, 22.5f,  // Origin of rotation (center of the sprite)
+                45f, 45f,  // Width and height
                 1, 1,  // Scale
                 dynamicFallingBody.getAngle() * (180f / (float)Math.PI),  // Rotation angle in degrees
                 0, 0,  // Source X and Y
@@ -65,23 +65,25 @@ public class Pig {
         }
     }
 
-    private void createDynamicFallingBody() {
-        // Create the body definition
+    public Body createDynamicFallingBody() {
+        float radius = 22.5f;
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(x / PIXELS_TO_METERS, y / PIXELS_TO_METERS);
         Body body = world.createBody(bodyDef);
-        PolygonShape boxShape = new PolygonShape();
-        boxShape.setAsBox(25f / PIXELS_TO_METERS, 25f / PIXELS_TO_METERS);
+        CircleShape circleShape = new CircleShape();
+        circleShape.setRadius(radius / PIXELS_TO_METERS);
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = boxShape;
-        fixtureDef.density = 1f;
+        fixtureDef.shape = circleShape;
+        fixtureDef.density = 1.2f;
         fixtureDef.friction = 0.5f;
-        fixtureDef.restitution = 0.3f;
+        fixtureDef.restitution = 0.5f;
         body.createFixture(fixtureDef);
-        boxShape.dispose();
+        body.setAngularDamping(4f);
+        circleShape.dispose();
         this.dynamicFallingBody = body;
         body.setUserData(this);
+        return body;
     }
 
     public void dispose() {
@@ -112,6 +114,13 @@ public class Pig {
         this.angle = angle;
     }
 
+    public boolean isinboundary(){
+        if (dynamicFallingBody.getPosition().x >=1610 || dynamicFallingBody.getPosition().x <=-10||dynamicFallingBody.getPosition().y<=-10) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 //    public boolean isAlive() {
 //        return alive;
 //    }

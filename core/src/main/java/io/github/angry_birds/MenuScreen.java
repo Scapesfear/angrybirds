@@ -75,7 +75,7 @@ public class MenuScreen implements Screen {
     public MenuScreen(Main game) {
         this.game = game;
         this.sound = Gdx.audio.newSound(Gdx.files.internal("ui/abf.mp3"));
-        long soundId = sound.play(0.5f);
+        long soundId = sound.play(0.1f);
         sound.setLooping(soundId, true);
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
@@ -146,13 +146,13 @@ public class MenuScreen implements Screen {
         Tick.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new levelbg(game,1,false));
+                game.setScreen(new levelbg(game,1,false,sound));
             }
         });
         Notick.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new levelbg(game,1,true));
+                game.setScreen(new levelbg(game,1,true,sound));
             }
         });
 
