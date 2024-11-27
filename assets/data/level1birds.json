@@ -1,20 +1,18 @@
-[{
-  "type": "Chuck",
-  "alive": true
-}
- ,{
-  "type": "Chuck",
-  "alive": true
-}
-,{
-  "type": "Chuck",
-  "alive": true
-}
-,{
-  "type": "Chuck",
-  "alive": true
-}
- , {
-  "type": "Bomb",
-  "alive": true
-  }]
+[
+    {
+        "alive": true,
+        "type": "Chuck"
+    },
+    {
+        "alive": true,
+        "type": "Chuck"
+    },
+    {
+        "alive": true,
+        "type": "Chuck"
+    },
+    {
+        "alive": true,
+        "type": "Chuck"
+    }
+]

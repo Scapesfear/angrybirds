@@ -19,6 +19,7 @@ public class Pig {
     private CustomWorld world;
     private int maxHits;
     private ShapeRenderer shapeRenderer;
+    private boolean alive;
 
     public Pig(String imagePath, CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch, float x, float y, float angle) {
         pigTexture = new Sprite(new Texture(imagePath));
@@ -110,4 +111,8 @@ public class Pig {
     public void setAngle(float angle) {
         this.angle = angle;
     }
+
+//    public boolean isAlive() {
+//        return alive;
+//    }
 }

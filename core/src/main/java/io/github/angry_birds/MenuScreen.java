@@ -60,6 +60,7 @@ public class MenuScreen implements Screen {
     private Window window;
     private Stage stage;
     private Texture worldclouds;
+    private int level;
 
     public MenuScreen(Main game, Sound sound) {
         this.game = game;
@@ -145,13 +146,13 @@ public class MenuScreen implements Screen {
         Tick.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new levelbg(game,1));
+                game.setScreen(new levelbg(game,1,false));
             }
         });
         Notick.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new levelbg(game,1));
+                game.setScreen(new levelbg(game,1,true));
             }
         });
 
@@ -235,15 +236,18 @@ public class MenuScreen implements Screen {
                 game.setScreen(new FirstScreen(game,sound));
             }
             if (touchPos.x >= 737 && touchPos.x <= 900 && touchPos.y >= 337 && touchPos.y <= 500) {
+                level=2;
                 window.setVisible(true);
                 Gdx.input.setInputProcessor(stage);
             }
             if (touchPos.x >= 1137 && touchPos.x <= 1300 && touchPos.y >= 337 && touchPos.y <= 500) {
+                level=3;
                 window.setVisible(true);
                 Gdx.input.setInputProcessor(stage);
             }
             if (touchPos.x >= 337 && touchPos.x <= 500 && touchPos.y >= 337 && touchPos.y <= 500) {
                 window.setVisible(true);
+                level=1;
                 Gdx.input.setInputProcessor(stage);
             }
 
