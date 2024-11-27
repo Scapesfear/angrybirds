@@ -328,7 +328,7 @@ public class levelbg implements Screen {
         Body body = world.createBody(bd);
         FixtureDef fd = new FixtureDef();
         fd.density = 1;
-        fd.friction = 0.5f;
+        fd.friction = 0.3f;
         fd.restitution = 0.3f;
         loader.attachFixture(body, "Name", fd, 4.3f);
         return body;

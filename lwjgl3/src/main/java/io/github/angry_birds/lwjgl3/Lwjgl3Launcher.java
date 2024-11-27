@@ -1,8 +1,8 @@
 package io.github.angry_birds.lwjgl3;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-//import com.mygdx.Main;
 import io.github.angry_birds.Main;
+//import io.github.angry_birds.Main;
 
 /** Launches the desktop (LWJGL3) application. */
 public class  Lwjgl3Launcher {

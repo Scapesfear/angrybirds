@@ -94,7 +94,7 @@ public class Block {
 
     public void isinboundary(List<Block> blocks) {
         if (dynamicFallingBody.getPosition().x >=1610 || dynamicFallingBody.getPosition().x <=-10||dynamicFallingBody.getPosition().y<=-10) {
-           // world.destroyBody(dynamicFallingBody);
+           //world.destroyBody(dynamicFallingBody);
         }
     }
 

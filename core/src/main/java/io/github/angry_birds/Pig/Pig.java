@@ -1,11 +1,15 @@
 package io.github.angry_birds.Pig;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
+import com.mygdx.BodyEditorLoader;
 import io.github.angry_birds.CustomWorld;
 
 public class Pig {
@@ -20,8 +24,10 @@ public class Pig {
     private int maxHits;
     private ShapeRenderer shapeRenderer;
     private boolean alive;
+    private Vector2 origin;
+    private String name;
 
-    public Pig(String imagePath, CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch, float x, float y, float angle) {
+    public Pig(String imagePath, CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch, float x, float y, float angle, String name) {
         pigTexture = new Sprite(new Texture(imagePath));
         this.world = world;
         this.shapeRenderer = shapeRenderer;
@@ -30,6 +36,7 @@ public class Pig {
         this.y = y;
         this.angle = angle;
         this.maxHits = 2;
+        this.name = name;
         createDynamicFallingBody();
     }
 
@@ -48,41 +55,34 @@ public class Pig {
             world.getBodiesToDestroy().add(dynamicFallingBody);
         }
     }
-
-    // Render method that applies rotation
     public void render(SpriteBatch batch) {
-        if (dynamicFallingBody != null) {
-            batch.draw(pigTexture.getTexture(),
-                dynamicFallingBody.getPosition().x * PIXELS_TO_METERS - 22.5f,
-                dynamicFallingBody.getPosition().y * PIXELS_TO_METERS - 22.5f,
-                22.5f, 22.5f,  // Origin of rotation (center of the sprite)
-                45f, 45f,  // Width and height
-                1, 1,  // Scale
-                dynamicFallingBody.getAngle() * (180f / (float)Math.PI),  // Rotation angle in degrees
-                0, 0,  // Source X and Y
-                pigTexture.getRegionWidth(), pigTexture.getRegionHeight(),  // Source width and height
-                false, false); // Flip X and Y
+        if (dynamicFallingBody != null && !world.getBodiesToDestroy().contains(dynamicFallingBody)) {
+            Vector2 bottlePos = dynamicFallingBody.getPosition().sub(origin);
+            pigTexture.setPosition(bottlePos.x*PIXELS_TO_METERS, bottlePos.y*PIXELS_TO_METERS);
+            pigTexture.setOriginCenter();
+            pigTexture.setSize(45, 45);
+            pigTexture.setOrigin(origin.x*PIXELS_TO_METERS, origin.y*PIXELS_TO_METERS);
+            pigTexture.setRotation(dynamicFallingBody.getAngle() * MathUtils.radiansToDegrees);
+            pigTexture.draw(batch);
         }
     }
 
     public Body createDynamicFallingBody() {
-        float radius = 22.5f;
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(x / PIXELS_TO_METERS, y / PIXELS_TO_METERS);
-        Body body = world.createBody(bodyDef);
-        CircleShape circleShape = new CircleShape();
-        circleShape.setRadius(radius / PIXELS_TO_METERS);
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = circleShape;
-        fixtureDef.density = 1.2f;
-        fixtureDef.friction = 0.5f;
-        fixtureDef.restitution = 0.5f;
-        body.createFixture(fixtureDef);
+        BodyEditorLoader loader;
+        loader = new BodyEditorLoader(Gdx.files.internal("data/pigs.json"));
+        BodyDef bd = new BodyDef();
+        bd.type = BodyDef.BodyType.DynamicBody;
+        bd.position.set(x / PIXELS_TO_METERS, y / PIXELS_TO_METERS);
+        Body body = world.createBody(bd);
+        FixtureDef fd = new FixtureDef();
+        fd.density = 1f;
+        fd.friction = 0.5f;
+        fd.restitution = 0.2f;
+        loader.attachFixture(body,name, fd, 0.9f);
+        this.origin = loader.getOrigin(name, 0.9f);
         body.setAngularDamping(4f);
-        circleShape.dispose();
-        this.dynamicFallingBody = body;
         body.setUserData(this);
+        this.dynamicFallingBody = body;
         return body;
     }
 

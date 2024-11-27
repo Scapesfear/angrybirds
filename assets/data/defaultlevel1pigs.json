@@ -2,7 +2,7 @@
   "type": "AlienPig",
   "alive": true,
   "x": 1054,
-    "y": 655,
+    "y": 455,
     "angle": 75
 
 },
@@ -10,7 +10,7 @@
     "type": "HektorPorko",
     "alive": true,
     "x": 1179,
-    "y": 655,
+    "y": 555,
     "angle": 75
 
   },

@@ -106,8 +106,8 @@ public class    MyGame implements Screen {
         blocks.add(new Ice(1177, 600, world, shapeRenderer, batch,45));
         blocks.add(new Stone(1177, 700, world, shapeRenderer, batch,45));
 
-        //pigs = new ArrayList<>();
-        //pigs = FileManager.getInstance().loadPigs(world, shapeRenderer, batch, 1);
+        pigs = new ArrayList<>();
+        pigs = FileManager.getInstance().loadPigs(world, shapeRenderer, batch, 1,false);
 
         camera = new OrthographicCamera();
         //viewport = new FitViewport(1600, 900, camera);
@@ -293,9 +293,9 @@ public class    MyGame implements Screen {
             block.render(batch);
             block.isinboundary(blocks);
         }
-//        for (Pig pig : pigs) {
-//            pig.render(batch);
-//        }
+        for (Pig pig : pigs) {
+            pig.render(batch);
+        }
 
 
         if(bird!=null&&(((Bird) bird.getUserData()).isinboundary()||((Bird) bird.getUserData()).stationary())){

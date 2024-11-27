@@ -100,7 +100,7 @@ public class FileManager {
            if (alive) {
                 switch (pigType) {
                     case "Pig":
-                        pigs.add(new Pig("ui/pig.png", world, shapeRenderer, batch, x, y, angle));
+                        pigs.add(new Pig("ui/pig.png", world, shapeRenderer, batch, x, y, angle, "Pig"));
                         break;
                     case "KingPig":
                         pigs.add(new KingPig(world, shapeRenderer, batch, x, y, angle));

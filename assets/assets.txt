@@ -20,6 +20,7 @@ data/level3blocks.json
 data/level3pigs.json
 data/load1.json
 data/load2.json
+data/pigs.json
 ui/2063292.jpg
 ui/abf.mp3
 ui/alienpig.png
