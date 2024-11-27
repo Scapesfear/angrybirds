@@ -1,13 +1,17 @@
 [{
+  "type": "RedBird",
+  "alive": true
+},
+  {
   "type": "Chuck",
   "alive": true
 }
  ,{
-  "type": "Chuck",
+  "type": "Bomb",
   "alive": true
 }
 ,{
-  "type": "Chuck",
+  "type": "RedBird",
   "alive": true
 }
 ,{

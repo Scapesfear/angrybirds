@@ -7,7 +7,7 @@ import io.github.angry_birds.CustomWorld;
 public class Stone extends Block {
 
     public Stone(float x, float y, CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch,float angle) {
-        super(x, y,"ui/stone.png", world, batch, shapeRenderer,4,2,50,50,angle);
+        super(x, y,"ui/stone.png", world, batch, shapeRenderer,4,1.5f,50,50,angle);
         super.createRectangulardynamicBody();
     }
 }

@@ -1,4 +1,5 @@
 .gitkeep
+data/bird.json
 data/defaultlevel1birds.json
 data/defaultlevel1blocks.json
 data/defaultlevel1pigs.json

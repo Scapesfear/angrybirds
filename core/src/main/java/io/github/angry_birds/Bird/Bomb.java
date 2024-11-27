@@ -7,6 +7,6 @@ import io.github.angry_birds.CustomWorld;
 
 public class Bomb extends Bird {
     public Bomb(CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch, Catapult catapult) {
-        super("ui/bomb.png", world, shapeRenderer, batch, catapult,2) ;
+        super("ui/bomb.png", world, shapeRenderer, batch, catapult,2.1f,"bomb") ;
     }
 }

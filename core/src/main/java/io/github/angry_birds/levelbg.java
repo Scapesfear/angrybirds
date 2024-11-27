@@ -323,15 +323,13 @@ public class levelbg implements Screen {
         else{ loader = new BodyEditorLoader(Gdx.files.internal("data/load2.json"));
         }
         BodyDef bd = new BodyDef();
-        bd.type = BodyDef.BodyType.KinematicBody;
+        bd.type = BodyDef.BodyType.StaticBody;
         bd.position.set(x / PIXELS_TO_METERS, y / PIXELS_TO_METERS);
         Body body = world.createBody(bd);
-// 2. Create a FixtureDef, as usual.
         FixtureDef fd = new FixtureDef();
         fd.density = 1;
         fd.friction = 0.5f;
         fd.restitution = 0.3f;
-// 3. Create a Body, as usual.
         loader.attachFixture(body, "Name", fd, 4.3f);
         return body;
     }

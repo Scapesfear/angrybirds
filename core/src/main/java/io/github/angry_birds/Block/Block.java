@@ -40,7 +40,7 @@ public class Block {
         this.density=density;
         this.scaleX = width;
         this.scaleY = height;
-        blockTexture.setSize(scaleX, scaleY); // Set the size of the sprite to match the body's dimensions
+        blockTexture.setSize(scaleX, scaleY);
         blockTexture.setOriginCenter();
         this.rotationAngle=rotationAngle;
     }
@@ -86,7 +86,7 @@ public class Block {
         fixtureDef.shape = rectangle;
         fixtureDef.density = density;
         fixtureDef.friction = 0.3f;
-        fixtureDef.restitution = 0.5f;
+        fixtureDef.restitution = 0.2f;
         body.createFixture(fixtureDef);
         rectangle.dispose() ;
         this.dynamicFallingBody=body;
@@ -94,7 +94,7 @@ public class Block {
 
     public void isinboundary(List<Block> blocks) {
         if (dynamicFallingBody.getPosition().x >=1610 || dynamicFallingBody.getPosition().x <=-10||dynamicFallingBody.getPosition().y<=-10) {
-            world.destroyBody(dynamicFallingBody);
+           // world.destroyBody(dynamicFallingBody);
         }
     }
 

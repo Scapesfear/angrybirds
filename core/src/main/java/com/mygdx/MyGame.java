@@ -453,7 +453,7 @@ public class    MyGame implements Screen {
         else{ loader = new BodyEditorLoader(Gdx.files.internal("data/load2.json"));
         }
         BodyDef bd = new BodyDef();
-        bd.type = BodyDef.BodyType.KinematicBody;
+        bd.type = BodyDef.BodyType.StaticBody;
         bd.position.set(x / PIXELS_TO_METERS, y / PIXELS_TO_METERS);
         Body body = world.createBody(bd);
 // 2. Create a FixtureDef, as usual.
