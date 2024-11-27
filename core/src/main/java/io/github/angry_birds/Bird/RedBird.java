@@ -7,6 +7,6 @@ import io.github.angry_birds.CustomWorld;
 
 public class RedBird extends Bird {
     public RedBird(CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch, Catapult catapult) {
-        super("ui/redbird.png", world, shapeRenderer, batch,catapult );
+        super("ui/redbird.png", world, shapeRenderer, batch,catapult,1.5f );
     }
 }

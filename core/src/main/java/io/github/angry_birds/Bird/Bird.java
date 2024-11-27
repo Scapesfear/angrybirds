@@ -22,14 +22,16 @@ public class Bird {
     private int maxHits;
     private ShapeRenderer shapeRenderer;
     private Catapult catapult;
+    private float density ;
 
-    public Bird(String imagePath, CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch,Catapult catapult) {
+    public Bird(String imagePath, CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch,Catapult catapult,float density) {
         birdTexture = new Sprite(new Texture(imagePath));
         this.world = world;
         this.shapeRenderer = shapeRenderer;
         this.batch = batch;
         this.maxHits = 2;
         this.catapult = catapult;
+        this.density = density;
     }
 
 
@@ -87,10 +89,11 @@ public class Bird {
         circleShape.setRadius(radius / PIXELS_TO_METERS);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circleShape;
-        fixtureDef.density = 1f;
-        fixtureDef.friction = 0.1f;
+        fixtureDef.density = density;
+        fixtureDef.friction = 0.5f;
         fixtureDef.restitution = 0.5f;
         body.createFixture(fixtureDef);
+        body.setAngularDamping(2f);
         circleShape.dispose();
         this.dynamicFallingBody = body;
         body.setUserData(this);

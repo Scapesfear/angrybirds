@@ -19,15 +19,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.BodyEditorLoader;
 import io.github.angry_birds.Bird.Bird;
 import io.github.angry_birds.Block.Block;
 import io.github.angry_birds.Block.Ice;
 import io.github.angry_birds.Block.Stone;
 import io.github.angry_birds.Block.Wood;
 import io.github.angry_birds.Pig.Pig;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -41,7 +42,7 @@ public class levelbg implements Screen {
     private Body staticCircleBody;
     private Body staticCircleBody2;
     private Body bird=null;
-    private float gravity = -9.8f;
+    private final float gravity = -9.8f;
     private final Texture Background=new Texture(Gdx.files.internal("ui/screen.png"));
     private final Texture levelbgsand=new Texture("ui/menu_background.png");
     private final Texture menubutton = new Texture("ui/pause.png");
@@ -56,21 +57,25 @@ public class levelbg implements Screen {
     private Window windowlose;
     private final Catapult catapult=new Catapult("ui/catapult.png", 400, 400);
     private Stack<Bird> birds;
-    private int bird_idx=0;
+    private final int bird_idx=0;
     private boolean isDragging = false;
     private boolean isMouseHeld = false;
     private boolean launchactivated = false;
-    private boolean launchrender = false;
+    private final boolean launchrender = false;
     private List<Block> blocks;
     private List<Pig> pigs;
-    private boolean isPaused = false;
+    private final boolean isPaused = false;
     private final CustomWorld world= new CustomWorld(new Vector2(0, -9.8f), true);
     private ShapeRenderer shapeRenderer;
     private final float PIXELS_TO_METERS = 50f;
     private final Texture circleTexture = new Texture(Gdx.files.internal("ui/planet.png"));
-    private Texture newball=(new Texture(Gdx.files.internal("ui/wood.png")));
+    private final Texture newball=(new Texture(Gdx.files.internal("ui/wood.png")));
     private boolean freeze=false;
-
+    private Body staticCircleBody5;
+    private Body staticCircleBody6;
+    //private Box2DDebugRenderer debugRenderer;
+    private final Texture land1= new Texture("ui/land1.png");
+    private final Texture land2= new Texture("ui/land2.png");
     public levelbg(Main game, Sound asound) {
         Sound sound1;
         this.game = game;
@@ -94,25 +99,17 @@ public class levelbg implements Screen {
 
     @Override
     public void show() {
-
         Texture mainbutton = new Texture("ui/menuescreen.png");
         Texture reload = new Texture("ui/restart.png");
         Texture play = new Texture("ui/play_.png");
 
-        birds = new Stack<>();
-        birds = FileManager.getInstance().loadBirds(world, shapeRenderer, batch, catapult, level);
-        blocks = new ArrayList<>();
-        blocks.add(new Wood(90, 1170, 530, 1f, 1f));
-        blocks.add(new Ice(0, 1170-100.5f+5+1+1, 730-100.5f+10, 1f, 1f));
-        blocks.add(new Stone(90, 1170-201, 530, 1f, 1f));
-
-        pigs = new ArrayList<>();
-        pigs = FileManager.getInstance().loadPigs(world, shapeRenderer, batch, level);
+//        pigs = new ArrayList<>();
+        //pigs = FileManager.getInstance().loadPigs(world, shapeRenderer, batch, level);
 
         camera = new OrthographicCamera();
         viewport = new FitViewport(1600, 900, camera);
         camera.setToOrtho(false, 1600 / PIXELS_TO_METERS, 900 / PIXELS_TO_METERS);
-        camera.position.set(1600 / 2f, 900 / 2f, 0);
+        camera.position.set(1600 / 100f, 900 / 100f, 0);
         camera.update();
         stage = new Stage(viewport, batch);
         Gdx.input.setInputProcessor(stage);
@@ -251,16 +248,22 @@ public class levelbg implements Screen {
         long soundId = sound.play(1);
         sound.setLooping(soundId, true);
         shapeRenderer = new ShapeRenderer();
-        staticCircleBody = planet(453.5f, 300.5f, 107.5f);
-        staticCircleBody2 = planet(1177.5f, 240.5f, 207.5f);
+        birds = new Stack<>();
+        birds = FileManager.getInstance().loadBirds(world, shapeRenderer, batch, catapult, level);
+        blocks = new ArrayList<>();
+        blocks.add(new Wood(1177, 440, world, shapeRenderer, batch,45));
+        blocks.add(new Ice(1177, 520, world, shapeRenderer, batch,0));
+        blocks.add(new Stone(1177, 600, world, shapeRenderer, batch,0));
+        staticCircleBody = planet(453f, 300f, 100f);
+        staticCircleBody2 = planet(1177f, 240f, 171f);
+        staticCircleBody5=createTriangularStaticBody(960, 318f,true);
+        staticCircleBody6=createTriangularStaticBody(1180, 318f,false);
+        //debugRenderer = new Box2DDebugRenderer(true, true, true, true, true, true);
+
     }
 
     @Override
     public void render(float delta) {
-        if (isPaused){
-            stage.draw();
-            return;
-        }
         shapeRenderer.setProjectionMatrix(camera.combined);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -269,35 +272,35 @@ public class levelbg implements Screen {
         camera.unproject(touchPos.set(x, y, 0f), viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-
-
         batch.draw(levelbgsand, 0, 0, 1790f, viewport.getWorldHeight());
         catapult.render(batch,delta,stage,touchPos);
         batch.draw(menubutton, 50, 900 - 40 - menubutton.getHeight(), menubutton.getWidth(), menubutton.getHeight());
         batch.draw(circleTexture,
-            staticCircleBody.getPosition().x * PIXELS_TO_METERS - 107.5f,
-            staticCircleBody.getPosition().y * PIXELS_TO_METERS - 107.5f,
-            215, 215);
-        batch.draw(circleTexture,
-            staticCircleBody2.getPosition().x * PIXELS_TO_METERS - 207.5f,
-            staticCircleBody2.getPosition().y * PIXELS_TO_METERS - 207.5f,
-            415, 415);
+            staticCircleBody.getPosition().x * PIXELS_TO_METERS - 100f,
+            staticCircleBody.getPosition().y * PIXELS_TO_METERS - 100f,
+            200, 200);
 
-//        for (Block block : blocks) {
-//            block.render(batch);
-//        }
+        batch.draw(land1,staticCircleBody5.getPosition().x*PIXELS_TO_METERS,staticCircleBody5.getPosition().y*PIXELS_TO_METERS,220,93);
+        batch.draw(land2,staticCircleBody6.getPosition().x*PIXELS_TO_METERS,staticCircleBody6.getPosition().y*PIXELS_TO_METERS,220,93);
+        batch.draw(circleTexture,
+            staticCircleBody2.getPosition().x * PIXELS_TO_METERS - 171f,
+            staticCircleBody2.getPosition().y * PIXELS_TO_METERS - 171f,
+            342, 342);
+        for (Block block : blocks) {
+            block.render(batch);
+        }
 //        for (Pig pig : pigs) {
 //            pig.render(batch);
 //        }
 
 
         if(bird!=null&&(((Bird) bird.getUserData()).isinboundary()||((Bird) bird.getUserData()).stationary())){
-            //world.destroyBody(bird);
+            world.destroyBody(bird);
             bird=null;
             freeze=false;
         }
         if (Gdx.input.justTouched()) {
-            if (touchPos.x >= 50 && touchPos.x <= 150 && touchPos.y >= 900 - 40 - menubutton.getHeight() && touchPos.y <= 900 - 40) {
+            if (touchPos.x >= 50 && touchPos.x <= 150 && touchPos.y >= 900 - 40 - menubutton.getHeight() && touchPos.y <= 900 - 40&& !freeze) {
                 window.setVisible(true);
                 Gdx.input.setInputProcessor(stage);
             }
@@ -368,6 +371,7 @@ public class levelbg implements Screen {
         stage.act(delta);
         stage.draw();
         world.step(1/60f, 6, 2);
+        //debugRenderer.render(world.getWorld(), camera.combined);
 
     }
 
@@ -397,6 +401,7 @@ public class levelbg implements Screen {
         shapeRenderer.dispose();
         circleTexture.dispose();
         birds.clear();
+        //debugRenderer.dispose();
 //        for (Body body : world.getBodiesToDestroy()) {
 //            world.destroyBody(body);
 //        }
@@ -413,13 +418,49 @@ public class levelbg implements Screen {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circleShape;
         fixtureDef.density = 1f;
-        fixtureDef.friction = 0.5f;
-        fixtureDef.restitution = 0.5f;
+        fixtureDef.friction = 0.7f;
+        fixtureDef.restitution = 0.3f;
         body.createFixture(fixtureDef);
         circleShape.dispose();
         return body;
     }
 
+    private Body createTriangularStaticBody(float x, float y, boolean bool) {
+        BodyEditorLoader loader;
+        if(bool) {
+            loader = new BodyEditorLoader(Gdx.files.internal("data/load1.json"));
+        }
+        else{ loader = new BodyEditorLoader(Gdx.files.internal("data/load2.json"));
+        }
+        BodyDef bd = new BodyDef();
+        bd.type = BodyDef.BodyType.KinematicBody;
+        bd.position.set(x / PIXELS_TO_METERS, y / PIXELS_TO_METERS);
+        Body body = world.createBody(bd);
+// 2. Create a FixtureDef, as usual.
+        FixtureDef fd = new FixtureDef();
+        fd.density = 1;
+        fd.friction = 0.5f;
+        fd.restitution = 0.3f;
+// 3. Create a Body, as usual.
+        loader.attachFixture(body, "Name", fd, 4.3f);
+        return body;
+    }
 
+
+
+    public int countStaticBodies(World world) {
+        int staticBodyCount = 0;
+        Array<Body> bodies = new Array<>();
+        world.getBodies(bodies);
+        // Iterate through all the bodies in the world
+        for (Body body : bodies) {
+            // Check if the body's type is static
+            if (body.getType() == BodyDef.BodyType.StaticBody) {
+                staticBodyCount++;
+            }
+        }
+        return staticBodyCount;
+    }
 
 }
+

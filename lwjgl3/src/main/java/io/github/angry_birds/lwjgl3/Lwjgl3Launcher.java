@@ -2,9 +2,11 @@ package io.github.angry_birds.lwjgl3;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import io.github.angry_birds.Main;
+//import io.github.angry_birds.Main;
+
 
 /** Launches the desktop (LWJGL3) application. */
-public class                                             Lwjgl3Launcher {
+public class  Lwjgl3Launcher {
     public static void main(String[] args) {
         if (StartupHelper.startNewJvmIfRequired()) return;
         createApplication();

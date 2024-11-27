@@ -1,31 +1,49 @@
 package io.github.angry_birds.Block;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.*;
+import io.github.angry_birds.CustomWorld;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Block {
-    // Attributes
+    private static final float PIXELS_TO_METERS = 50f;
     private float x;
     private float y;
-    private int orientationBit;
-    private Texture blockTexture;
+    private Sprite blockTexture;
     private float scaleX;
     private float scaleY;
     private float rotationAngle;
-
-    // Constructor
-    public Block(float x, float y,float rotationAngle, String texturePath,float scaleX,float scaleY) {
+    private CustomWorld world;
+    private Body dynamicFallingBody;
+    private ShapeRenderer shapeRenderer;
+    private SpriteBatch batch;
+    private float health;
+    private float density ;
+    public Block(float x, float y, String texturePath, CustomWorld world, SpriteBatch batch, ShapeRenderer shapeRenderer, float health,float density,float width, float height ,float rotationAngle) {
         this.x = x;
         this.y = y;
-        this.orientationBit = orientationBit;
-        this.blockTexture = new Texture(texturePath);
-        this.rotationAngle = rotationAngle;
-        this.scaleX=scaleX;
-        this.scaleY =scaleY;
-
+        this.blockTexture = new Sprite(new Texture(texturePath));
+        this.world = world;
+        this.batch = batch;
+        this.shapeRenderer = shapeRenderer;
+        this.health=health;
+        this.density=density;
+        this.scaleX = width;
+        this.scaleY = height;
+        blockTexture.setSize(scaleX, scaleY); // Set the size of the sprite to match the body's dimensions
+        blockTexture.setOriginCenter();
+        this.rotationAngle=rotationAngle;
     }
 
-    // Getters and Setters
     public float getX() {
         return x;
     }
@@ -42,49 +60,41 @@ public class Block {
         this.y = y;
     }
 
-    public int getOrientationBit() {
-        return orientationBit;
-    }
-
-    public void setOrientationBit(int orientationBit) {
-        this.orientationBit = orientationBit;
-        this.rotationAngle = (orientationBit == 1) ? 90f : 0f;
-    }
-
-
     public void render(SpriteBatch batch) {
-
-
-
-        float originX = blockTexture.getWidth() / 2f;
-        float originY = blockTexture.getHeight() / 2f;
-
-        batch.draw(
-            blockTexture,   // Texture to draw
-            x,              // x position
-            y,              // y position
-            originX,        // origin x for rotation and scaling
-            originY,        // origin y for rotation and scaling
-            blockTexture.getWidth(),  // Width of texture
-            blockTexture.getHeight(), // Height of texture
-            scaleX,         // Scaling in x direction
-            scaleY,         // Scaling in y direction
-            rotationAngle,  // Rotation angle
-            0,              // Source x (top-left corner)
-            0,              // Source y (top-left corner)
-            (int) blockTexture.getWidth(),  // Source width
-            (int) blockTexture.getHeight(), // Source height
-            false,          // No flip horizontally
-            false           // No flip vertically
-        );
-    }
-
-
-    public void dispose() {
-        if (blockTexture != null) {
-            blockTexture.dispose();
+        if (dynamicFallingBody != null) {
+            Vector2 position = dynamicFallingBody.getPosition();
+            float angle = dynamicFallingBody.getAngle();
+            float x = position.x * PIXELS_TO_METERS;
+            float y = position.y * PIXELS_TO_METERS;
+            blockTexture.setPosition(x - blockTexture.getWidth() / 2, y - blockTexture.getHeight() / 2);
+            blockTexture.setRotation(angle * MathUtils.radiansToDegrees);
+            blockTexture.draw(batch);
         }
     }
+    public void createRectangulardynamicBody() {
+        float width=this.scaleX;
+        float height=this.scaleY;
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(x / PIXELS_TO_METERS, y / PIXELS_TO_METERS);
+        bodyDef.angle = rotationAngle;
+        Body body = world.createBody(bodyDef);
+        PolygonShape rectangle = new PolygonShape();
+        rectangle.setAsBox(width / (2 * PIXELS_TO_METERS), height / (2 * PIXELS_TO_METERS));
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = rectangle;
+        fixtureDef.density = density;
+        fixtureDef.friction = 0.3f;
+        fixtureDef.restitution = 0.5f;
+        body.createFixture(fixtureDef);
+        rectangle.dispose() ;
+        this.dynamicFallingBody=body;
+    }
 
+    public void isinboundary(List<Block> blocks) {
+        if (dynamicFallingBody.getPosition().x >=1610 || dynamicFallingBody.getPosition().x <=-10||dynamicFallingBody.getPosition().y<=-10) {
+            world.destroyBody(dynamicFallingBody);
+        }
+    }
 
 }
