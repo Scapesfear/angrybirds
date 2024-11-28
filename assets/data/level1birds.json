@@ -18,5 +18,9 @@
     {
         "alive": true,
         "type": "Chuck"
+    },
+    {
+        "alive": true,
+        "type": "Bomb"
     }
 ]

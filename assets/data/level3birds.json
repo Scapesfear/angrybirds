@@ -10,13 +10,5 @@
     {
         "alive": true,
         "type": "Bomb"
-    },
-    {
-        "alive": true,
-        "type": "RedBird"
-    },
-    {
-        "alive": true,
-        "type": "Chuck"
     }
 ]

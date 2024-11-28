@@ -98,7 +98,7 @@ public class Pig {
     }
 
     public float getX() {
-       return dynamicFallingBody.getPosition().x * PIXELS_TO_METERS - 20.5f;
+       return dynamicFallingBody.getPosition().x * PIXELS_TO_METERS ;
     }
 
     public void setX(float x) {
@@ -106,7 +106,7 @@ public class Pig {
     }
 
     public float getY() {
-        return dynamicFallingBody.getPosition().y * PIXELS_TO_METERS - 20.5f;
+        return dynamicFallingBody.getPosition().y * PIXELS_TO_METERS ;
     }
 
     public void setY(float y) {

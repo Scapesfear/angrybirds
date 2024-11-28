@@ -97,6 +97,7 @@ public class FirstScreen implements Screen {
             // Check for play button press
             if (touchPos.x > playButtonX+40 && touchPos.x < playButtonX + scaledPlayButtonWidth -40
                 && touchPos.y > playButtonY+10 && touchPos.y < playButtonY + scaledPlayButtonHeight-10) {
+                sound.stop();
                 game.setScreen(new MenuScreen(game,sound));
             }
 

@@ -151,6 +151,7 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Tick clicked - Level: " + level);
+                sound.stop();
                 game.setScreen(new levelbg(game, level, false));
             }
         });
@@ -159,6 +160,7 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Notick clicked - Level: " + level);
+                sound.stop();
                 game.setScreen(new levelbg(game, level, true));
             }
         });
@@ -243,6 +245,10 @@ public class MenuScreen implements Screen {
 
             // Only process level selection if the window is NOT visible
             if (!window.isVisible()) {
+                if (touchPos.x >= 50 && touchPos.x <= 150 && touchPos.y >= 50 && touchPos.y <= 150) {
+                    game.setScreen(new FirstScreen(game,sound));
+                }
+
                 if (touchPos.x >= 337 && touchPos.x <= 500 && touchPos.y >= 337 && touchPos.y <= 500) {
                     this.level = 1;
                     window.setVisible(true);
