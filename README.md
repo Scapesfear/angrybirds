@@ -1,142 +1,85 @@
-
 # Angry Birds Space-Themed Game
 
-A resizable and interactive game inspired by **Angry Birds Space**. The game offers an engaging level selection and gameplay experience, with a default aspect ratio of **1600x900** and a range of levels and game screens.
-
 ## Overview
-- **Game Genre**: Action/Puzzle
-- **Theme**: Inspired by Angry Birds Space
-- **Default Aspect Ratio**: 1600x900
-- **Source of Assets**: 
-  - [spriters-resources.com](https://www.spriters-resource.com)
-  - [wiki-Fandom.com](https://fandom.com)
-  - AI-generated assets from **DALL-E**
+This game is a faithful recreation of the classic Angry Birds gameplay, but with a space-themed twist. The core objective remains the same - use a slingshot to launch birds at structures housing evil pigs, with the goal of destroying all the pigs in each level.
 
-## Table of Contents
-- [Features](#features)
-- [Classes Overview](#classes-overview)
-- [Setup](#setup)
-- [Running the Game](#running-the-game)
-- [Testing](#testing)
-- [License](#license)
+What sets this version apart is the imaginative setting and enhanced visuals. The game takes place against the backdrop of a vast, starry sky, with levels set on various celestial bodies like planets and asteroids. The bird and pig characters have been redesigned with a sci-fi flair, adding to the immersive space theme.
 
-## Features
-1. **Loading Screen**: Shows a loading bar and transitions to the main screen.
-2. **Main Screen**: Navigation buttons for **Play** and **Quit**.
-3. **Menu Screen**: Level selection with interactive asteroid background.
-4. **Level Screen**: Gameplay screen with win and lose options.
-5. **Bird and Pig Characters**: Interactive characters with animations and sound effects.
+In addition to the classic Angry Birds gameplay, this version introduces several new and exciting features:
+
+## Key Features
+2. **Main Screen**: The main menu screen provides two primary options - "Play" to start the game, and "Quit" to exit.
+
+3. **Menu Screen**: The level selection menu displays all available stages in an interactive asteroid field. Players can browse through the levels and select the one they wish to play.
+
+4. **Level Screen**: This is where the core gameplay takes place. The level screen presents the playing field, with structures housing the evil pigs. Players use the slingshot to launch birds and destroy the pigs' defenses.
+
+5. **Bird and Pig Characters**: The classic Angry Birds characters have been reimagined with a space-themed design. The birds and pigs now have unique animations and sound effects that enhance the overall experience.
+
+6. **Resizable Window**: The game window can be resized, and all user interface (UI) elements will automatically adjust to maintain the optimal layout and proportions.
+
+7. **Save and Load**: Players can save their progress in the game and load their saved game from the menu screen, allowing them to pick up where they left off.
 
 ## Classes Overview
+The game is structured using the following key classes:
 
-### Main Class
-- **Main**: Extends the `Game` class, responsible for initializing the game with a loading screen.
+1. **Main**: This is the entry point of the application, responsible for initializing the game and loading the initial screen.
 
-### Screen Classes
-Each of these classes implements the `Screen` interface and provides unique functionality:
+2. **LoadingScreen**: This class handles the loading of game assets and displays a progress bar during the loading process. Once the assets are fully loaded, it transitions the game to the main screen.
 
-1. **LoadingScreen**
-   - **Purpose**: Shows a loading bar and loads resources.
-   - **Key Methods**:
-     - `show()`: Initializes the camera, viewport, and shape renderer.
-     - `render()`: Draws the loading background and bar. Transitions to `FirstScreen` once loading is complete.
-   - **Constructors**:
-     - `LoadingScreen(Game game)`: Sets up the loading screen with a reference to the main game.
+3. **FirstScreen**: This class represents the main menu screen, providing the "Play" and "Quit" options for the user.
 
-2. **FirstScreen**
-   - **Purpose**: Acts as the main menu screen with primary buttons.
-   - **Key Methods**:
-     - `show()`: Initializes the camera, viewport, and renderer.
-     - `render()`: Draws the background, Play, and Quit buttons. 
-       - **Play** button opens `MenuScreen`.
-       - **Quit** button exits the game.
-   - **Constructors**:
-     - `FirstScreen(Game game)`: Sets up the main menu.
-     - `FirstScreen(Game game, Sound sound)`: Sets up the main menu with background music.
+4. **MenuScreen**: The level selection screen, allowing players to choose the level they want to play. It also features the interactive asteroid field.
 
-3. **MenuScreen**
-   - **Purpose**: Level selection screen with asteroid animations.
-   - **Key Methods**:
-     - `show()`: Sets up the camera, viewport, and asteroid objects.
-     - `render()`: Draws the background with buttons for level selection and floating asteroids.
-       - Buttons allow selecting levels, returning to the main menu, or loading previous games.
-   - **Constructors**:
-     - `MenuScreen(Game game)`: Sets up the level selection menu.
-     - `MenuScreen(Game game, Sound sound)`: Retains music continuity from `FirstScreen`.
+5. **LevelScreen**: This is the core gameplay screen, where players use the slingshot to launch birds and destroy the pigs' structures.
 
-4. **Levelbg**
-   - **Purpose**: Core gameplay screen.
-   - **Key Methods**:
-     - `show()`: Initializes the camera, viewport, and window objects.
-     - `render()`: Draws the level background, including controls for saving, restarting, and quitting the level.
-       - **W Key**: Triggers the win screen.
-       - **L Key**: Triggers the lose screen.
-   - **Constructors**:
-     - `LevelScreen(Game game)`: Basic constructor.
-     - `LevelScreen(Game game, Sound sound)`: Disposes of menu music and starts level music.
+6. **Bird**: The player-controlled character, with methods for movement, interaction, and collision detection.
 
-### Other Classes
-- **Bird**: Represents the player's character. Includes functions for movement, interactions, and collisions.
-- **Pig**: Enemy character with similar methods to the bird but modified to trigger events when collided with.
-- **Block Subclasses**: `Stone`, `Ice`, and `Wood` classes each with unique characteristics and interaction methods. Adds variety in the gameplay environment.
+7. **Pig**: The enemy characters, with similar methods to the Bird class but modified to trigger specific events when collided with.
 
-## Setup
+8. **Block Subclasses**: These classes (Stone, Ice, and Wood) represent the various types of blocks that make up the structures in the game levels, each with unique characteristics and interaction methods.
 
-### Prerequisites
-- **Java Development Kit (JDK 8 or higher)**
-- **LibGDX**
-- **Gradle** (recommended for project setup)
-- **Git** (optional, for cloning the repository)
+## Setup and Running
+To set up and run the Angry Birds Space-Themed Game, follow these steps:
 
-### Installation
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/yourusername/angrybirds.git
-   cd angrybirds
-   ```
+1. **Prerequisites**:
+   - Ensure you have Java Development Kit (JDK) version 8 or higher installed on your system.
+   - Install the LibGDX framework, which is used for building the game.
+   - Set up Gradle, as it is the recommended build tool for this project.
+   - If you're using a version control system, you can clone the repository from the provided URL.
 
 2. **Build the Project**:
-   Use Gradle to install dependencies and build the project.
-   ```bash
-   ./gradlew build
-   ```
+   - Open a terminal or command prompt and navigate to the project directory.
+   - Run the following Gradle command to install dependencies and build the project:
+     ```
+     ./gradlew build
+     ``` 
 
-3. **Run Configurations (Optional in IDE)**:
-   Configure `Lwjgl3Launcher` as the main entry point in your IDE if you're running the project from there.
-
-## Running the Game
-
-### Running from Terminal
-Once dependencies are installed and the project is built, you can run the game from the terminal.
-
-1. **Navigate to the Build Directory**:
-   ```bash
-   cd build/libs
-   ```
-
-2. **Execute the JAR File**:
-   Run the compiled JAR file (replace `your-jar-file-name.jar` with the actual file name, which may vary).
-   ```bash
-   java -jar angrybirds.jar
-   ```
-
-3. **Control Summary**:
-   - **Main Menu**: Click "Play" to start or "Quit" to exit.
-   - **Menu Screen**: Select levels or return to the main screen.
-   - **Level Screen**: Press **W** for win screen and **L** for lose screen.
+3. **Run the Game**:
+   - You can run directly using 
+     ```
+     ./gradlew run 
+     ```
+5. **Controls**:
+   - **Main Menu**: Click the "Play" button to start the game or the "Quit" button to exit.
+   - **Menu Screen**: Select the desired level or click the back button to return to the main screen.
 
 ## Testing
-### Manual Testing
+To ensure the game is functioning correctly, perform the following manual tests:
+
 1. **Screen Transitions**:
-   - Confirm smooth transitions between screens.
-   - Verify music continuity between screens.
+   - Verify that the transitions between screens (loading, main menu, level selection, and gameplay) are smooth and seamless.
+   - Check that the music and sound effects transition properly between screens.
 
 2. **Gameplay**:
-   - Test button functionality on each screen.
-   - Check win/lose conditions and the menu options in the level screen.
+   - Thoroughly test the functionality of all buttons and interactive elements on each screen.
+   - Verify that the win and lose conditions are properly implemented in the level screen.
+   - Ensure that the menu options (such as saving and loading progress) work as expected.
 
 3. **Resizable Window**:
-   - Resize the window to check that UI elements adjust properly.
+   - Resize the game window to different dimensions and observe that all UI elements adjust accordingly, maintaining the optimal layout and proportions.
 
 4. **Save and Load**:
-   - Verify that saved progress can be loaded from the menu screen.
+   - Test the save and load functionality by playing through a level, saving the progress, and then verifying that the saved game can be properly loaded from the menu screen.
+
+By performing these tests, you can ensure that the Angry Birds Space-Themed Game is functioning as intended and provide a polished and enjoyable experience for players.
