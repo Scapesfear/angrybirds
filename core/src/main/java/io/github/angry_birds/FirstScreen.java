@@ -34,7 +34,7 @@ public class FirstScreen implements Screen {
         camera.position.set(1600 / 2f, 900 / 2f, 0);
         camera.update();
         this.sound = Gdx.audio.newSound(Gdx.files.internal("ui/abf.mp3"));
-        long soundId = sound.play(0.5f);
+        long soundId = sound.play(0.15f);
         sound.setLooping(soundId, true);
 
     }
@@ -71,7 +71,6 @@ public class FirstScreen implements Screen {
 
         batch.begin();
 
-        // Draw background and buttons
         batch.draw(background, 0, 0, WORLD_WIDTH, WORLD_HEIGHT);
 
         float scaledPlayButtonWidth = (float) playButton.getWidth() ;
@@ -89,19 +88,16 @@ public class FirstScreen implements Screen {
 
         batch.end();
 
-        // Handle input
+
         if (Gdx.input.justTouched()) {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos, viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
 
-            // Check for play button press
             if (touchPos.x > playButtonX+40 && touchPos.x < playButtonX + scaledPlayButtonWidth -40
                 && touchPos.y > playButtonY+10 && touchPos.y < playButtonY + scaledPlayButtonHeight-10) {
-                sound.stop();
                 game.setScreen(new MenuScreen(game,sound));
             }
 
-            // Check for quit button press (adjust Y position for letterboxing)
             if (touchPos.x > 50 && touchPos.x < 150
                 && touchPos.y > 40 && touchPos.y < 140 ) {
                 Gdx.app.exit();
@@ -113,6 +109,7 @@ public class FirstScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
+        stage.getViewport().update(width, height, true);
     }
 
     @Override

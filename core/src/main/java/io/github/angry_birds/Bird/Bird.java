@@ -23,37 +23,24 @@ public class Bird {
     private final float PIXELS_TO_METERS = 50f;
     private SpriteBatch batch;
     private CustomWorld world;
-    private int maxHits;
+    public int damage;
     private ShapeRenderer shapeRenderer;
     private Catapult catapult;
     private float density ;
     private Vector2 origin;
 
-    public Bird(String imagePath, CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch,Catapult catapult,float density,String name) {
+    public Bird(String imagePath, CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch,Catapult catapult,float density,String name,int damage) {
         birdTexture = new Sprite(new Texture(imagePath));
         this.world = world;
         this.shapeRenderer = shapeRenderer;
         this.batch = batch;
-        this.maxHits = 2;
+        this.damage = damage;
         this.catapult = catapult;
         this.density = density;
         this.name=name;
     }
 
-    public int getMaxHits() {
-        return maxHits;
-    }
 
-    public void setMaxHits(int maxHits) {
-        this.maxHits = maxHits;
-    }
-
-    public void decrementHits() {
-        this.maxHits--;
-        if (this.maxHits <= 0) {
-            world.getBodiesToDestroy().add(dynamicFallingBody);
-        }
-    }
 
     public void renderafterlaunch(SpriteBatch batch) {
         if (dynamicFallingBody != null && !world.getBodiesToDestroy().contains(dynamicFallingBody)) {
@@ -93,7 +80,7 @@ public class Bird {
         FixtureDef fd = new FixtureDef();
         fd.density = density;
         fd.friction = 0.5f;
-        fd.restitution = 0.3f;
+        fd.restitution = 0.2f;
         if(name=="redbird"){
             loader.attachFixture(body, name, fd, 0.8f);
             this.origin=loader.getOrigin(name, 0.8f);
@@ -105,7 +92,6 @@ public class Bird {
         body.setAngularDamping(2f);
         body.setUserData(this);
         this.dynamicFallingBody = body;
-
         return body;
     }
 
@@ -161,7 +147,4 @@ public class Bird {
 
     }
 
-    public boolean isAlive() {
-        return maxHits > 0;
-    }
 }

@@ -23,13 +23,14 @@ public class Block {
     private float scaleY;
     private float rotationAngle;
     private CustomWorld world;
-    private Body dynamicFallingBody;
+    public Body dynamicFallingBody;
     private ShapeRenderer shapeRenderer;
     private SpriteBatch batch;
-    private float health;
-    private float isalive;
-    private float density ;
-    public Block(float x, float y, String texturePath, CustomWorld world, SpriteBatch batch, ShapeRenderer shapeRenderer, float health,float density,float width, float height ,float rotationAngle) {
+    public float health;
+    public boolean alive;
+    private float density;
+    public int damage;
+    public Block(float x, float y, String texturePath, CustomWorld world, SpriteBatch batch, ShapeRenderer shapeRenderer, float health,float density,float width, float height ,float rotationAngle,int damage) {
         this.x = x;
         this.y = y;
         this.blockTexture = new Sprite(new Texture(texturePath));
@@ -43,6 +44,8 @@ public class Block {
         blockTexture.setSize(scaleX, scaleY);
         blockTexture.setOriginCenter();
         this.rotationAngle=rotationAngle;
+        this.alive=true;
+        this.damage=damage;
     }
 
     public float getX() {
@@ -74,6 +77,7 @@ public class Block {
             blockTexture.setPosition(x - blockTexture.getWidth() / 2, y - blockTexture.getHeight() / 2);
             blockTexture.setRotation(angle * MathUtils.radiansToDegrees);
             blockTexture.draw(batch);
+            isinboundary();
         }
     }
     public void createRectangulardynamicBody() {
@@ -92,13 +96,16 @@ public class Block {
         fixtureDef.friction = 0.5f;
         fixtureDef.restitution = 0.2f;
         body.createFixture(fixtureDef);
+        body.setUserData(this);
         rectangle.dispose() ;
         this.dynamicFallingBody=body;
     }
 
-    public void isinboundary(List<Block> blocks) {
-        if (dynamicFallingBody.getPosition().x >=1610 || dynamicFallingBody.getPosition().x <=-10||dynamicFallingBody.getPosition().y<=-10) {
-           //world.destroyBody(dynamicFallingBody);
+    public void isinboundary() {
+        if (dynamicFallingBody.getPosition().x >=1610 || dynamicFallingBody.getPosition().x <=-10||dynamicFallingBody.getPosition().y<=-10||health<=0) {
+           world.destroyBody(dynamicFallingBody);
+           alive=false;
+           dynamicFallingBody=null;
         }
     }
 

@@ -4,13 +4,15 @@
     "alive": true,
     "x": 1076,
     "y": 453,
-    "angle": 0
+    "angle": 0,
+    "HP": 20
   },
   {
-    "type": "AlienPig",
+    "type": "HektorPorko",
     "alive": true,
     "x": 1226,
     "y": 453,
-    "angle": 0
+    "angle": 0,
+    "HP": 30
   }
 ]

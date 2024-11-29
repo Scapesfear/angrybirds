@@ -1,16 +1,18 @@
 [
-    {
-        "alive": true,
-        "x": 1075.7819,
-        "y": 411.32043,
-        "angle": 0,
-        "type": "AlienPig"
-    },
-    {
-        "alive": true,
-        "x": 1225.7819,
-        "y": 411.32043,
-        "angle": 0,
-        "type": "AlienPig"
-    }
+  {
+    "type": "AlienPig",
+    "alive": true,
+    "x": 1076,
+    "y": 453,
+    "angle": 0,
+    "HP": 20
+  },
+  {
+    "type": "HektorPorko",
+    "alive": true,
+    "x": 1226,
+    "y": 453,
+    "angle": 0,
+    "HP": 30
+  }
 ]

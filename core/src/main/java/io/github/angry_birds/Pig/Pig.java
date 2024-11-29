@@ -10,7 +10,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.BodyEditorLoader;
+import io.github.angry_birds.Block.Block;
 import io.github.angry_birds.CustomWorld;
+
+import java.util.List;
 
 public class Pig {
     private Body dynamicFallingBody;
@@ -21,13 +24,13 @@ public class Pig {
     private final float PIXELS_TO_METERS = 50f;
     private SpriteBatch batch;
     private CustomWorld world;
-    private int maxHits;
+    public int Hp;
     private ShapeRenderer shapeRenderer;
-    private boolean alive;
+    public boolean alive;
     private Vector2 origin;
     private String name;
 
-    public Pig(String imagePath, CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch, float x, float y, float angle, String name) {
+    public Pig(String imagePath, CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch, float x, float y, float angle, String name,int Hp) {
         pigTexture = new Sprite(new Texture(imagePath));
         this.world = world;
         this.shapeRenderer = shapeRenderer;
@@ -35,33 +38,12 @@ public class Pig {
         this.x = x;
         this.y = y;
         this.angle = angle;
-        this.maxHits = 2;
+        this.Hp = Hp;
         this.name = name;
+        this.alive = true;
         createDynamicFallingBody();
     }
 
-    public int getMaxHits() {
-        return maxHits;
-    }
-
-    public void setMaxHits(int maxHits) {
-        this.maxHits = maxHits;
-    }
-
-    public Body getDynamicFallingBody() {
-        return dynamicFallingBody;
-    }
-
-    public void decrementHits() {
-        this.maxHits--;
-        if (this.maxHits <= 0) {
-            // Queue the body for destruction
-            world.getBodiesToDestroy().add(dynamicFallingBody);
-        }
-    }
-
-
-    // Render method that applies rotation
     public void render(SpriteBatch batch) {
         if (dynamicFallingBody != null && !world.getBodiesToDestroy().contains(dynamicFallingBody)) {
             Vector2 bottlePos = dynamicFallingBody.getPosition().sub(origin);
@@ -71,6 +53,7 @@ public class Pig {
             pigTexture.setOrigin(origin.x*PIXELS_TO_METERS, origin.y*PIXELS_TO_METERS);
             pigTexture.setRotation(dynamicFallingBody.getAngle() * MathUtils.radiansToDegrees);
             pigTexture.draw(batch);
+            isinboundary();
         }
     }
 
@@ -121,14 +104,14 @@ public class Pig {
         this.angle = angle;
     }
 
-    public boolean isinboundary(){
-        if (dynamicFallingBody.getPosition().x >=1610 || dynamicFallingBody.getPosition().x <=-10||dynamicFallingBody.getPosition().y<=-10) {
-            return true;
-        } else {
-            return false;
+    public void isinboundary() {
+        if (dynamicFallingBody.getPosition().x >=1610 || dynamicFallingBody.getPosition().x <=-10||dynamicFallingBody.getPosition().y<=-10||Hp<0) {
+            world.destroyBody(dynamicFallingBody);
+            alive=false;
+            dynamicFallingBody=null;
         }
+    }
     }
 //    public boolean isAlive() {
 //        return alive;
 //    }
-}

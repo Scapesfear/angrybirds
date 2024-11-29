@@ -37,6 +37,54 @@ public class FileManager {
         return instance;
     }
 
+    public static void setcompletedlevel(int level) {
+
+            String filepath = "data/LevelMatrix.json";
+            FileHandle fileHandle = Gdx.files.local(filepath);
+
+            try {
+                String content = fileHandle.readString();
+                JSONArray jsonArray = new JSONArray(content);
+
+                JSONObject levelObject = jsonArray.getJSONObject(level - 1);
+                levelObject.put(String.valueOf(level), true);
+
+                fileHandle.writeString(jsonArray.toString(4), false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+    }
+
+    public static void setuncompletedlevel(int level) {
+
+        String filepath = "data/LevelMatrix.json";
+        FileHandle fileHandle = Gdx.files.local(filepath);
+
+        try {
+            String content = fileHandle.readString();
+            JSONArray jsonArray = new JSONArray(content);
+
+            JSONObject levelObject = jsonArray.getJSONObject(level - 1);
+            levelObject.put(String.valueOf(level), false);
+
+            fileHandle.writeString(jsonArray.toString(4), false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
     public Stack<Bird> loadBirds(CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch, Catapult catapult, int level,boolean reset) {
         Stack<Bird> aliveBirds = new Stack<>();
         String filepath;
@@ -98,16 +146,17 @@ public class FileManager {
                 float x = (float)pigObject.getDouble("x");
                 float y = (float)pigObject.getDouble("y");
                 float angle = (float)pigObject.getDouble("angle");
+                int hp=(int)pigObject.getInt("HP");
            if (alive) {
                 switch (pigType) {
                     case "KingPig":
-                        pigs.add(new KingPig(world, shapeRenderer, batch, x, y, angle));
+                        pigs.add(new KingPig(world, shapeRenderer, batch, x, y, angle,hp));
                         break;
                     case "AlienPig":
-                        pigs.add(new AlienPig(world, shapeRenderer, batch, x, y, angle));
+                        pigs.add(new AlienPig(world, shapeRenderer, batch, x, y, angle,hp));
                         break;
                     case "HektorPorko":
-                        pigs.add(new HektorPorko(world, shapeRenderer, batch, x, y, angle));
+                        pigs.add(new HektorPorko(world, shapeRenderer, batch, x, y, angle,hp));
                         break;
                 }
             }}
@@ -140,31 +189,32 @@ public class FileManager {
                 float x = (float)blockObject.getDouble("x");
                 float y = (float)blockObject.getDouble("y");
                 float angle = (float)blockObject.getDouble("angle");
+                int health= (int)blockObject.getInt("HP");
                 if (alive) {
                     switch (blockType) {
                         case "Wood":
-                            blocks.add(new Wood(x, y, world, shapeRenderer, batch, angle));
+                            blocks.add(new Wood(x, y, world, shapeRenderer, batch, angle,health));
                             break;
                         case "Stone":
-                            blocks.add(new Stone(x, y, world, shapeRenderer, batch, angle));
+                            blocks.add(new Stone(x, y, world, shapeRenderer, batch, angle,health));
                             break;
                         case "Ice":
-                            blocks.add(new Ice(x, y, world, shapeRenderer, batch, angle));
+                            blocks.add(new Ice(x, y, world, shapeRenderer, batch, angle,health));
                             break;
                         case "Woodplank":
-                            blocks.add(new Woodplank(x, y, world, shapeRenderer, batch, angle));
+                            blocks.add(new Woodplank(x, y, world, shapeRenderer, batch, angle,health));
                             break;
                         case "StonePlank":
-                            blocks.add(new StonePlank(x, y, world, shapeRenderer, batch, angle));
+                            blocks.add(new StonePlank(x, y, world, shapeRenderer, batch, angle,health));
                             break;
                         case "IcePlank":
-                            blocks.add(new IcePlank(x, y, world, shapeRenderer, batch, angle));
+                            blocks.add(new IcePlank(x, y, world, shapeRenderer, batch, angle,health));
                             break;
                         case "Icehollow":
-                            blocks.add(new Icehollow(x, y, world, shapeRenderer, batch, angle));
+                            blocks.add(new Icehollow(x, y, world, shapeRenderer, batch, angle,health));
                             break;
                         case "Stonehollow":
-                            blocks.add(new Stonehollow(x, y, world, shapeRenderer, batch, angle));
+                            blocks.add(new Stonehollow(x, y, world, shapeRenderer, batch, angle,health));
                             break;
                         default:
                             System.err.println("Unknown block type: " + blockType);
@@ -209,7 +259,7 @@ public class FileManager {
         for (Bird bird : birds) {
             JSONObject birdObject = new JSONObject();
             birdObject.put("type", bird.getClass().getSimpleName());
-            birdObject.put("alive", bird.isAlive());
+            birdObject.put("alive", true);
             jsonArray.put(birdObject);
         }
 
@@ -217,6 +267,7 @@ public class FileManager {
         FileHandle fileHandle = Gdx.files.local(filepath);
 
         fileHandle.writeString(jsonArray.toString(4), false);
+        setuncompletedlevel(level);
     }
 
     public void savePigs(ArrayList<Pig> pigs, int level, boolean reset) {
@@ -242,13 +293,16 @@ public class FileManager {
         // If not resetting or default file doesn't exist, save current pigs
         JSONArray jsonArray = new JSONArray();
         for (Pig pig : pigs) {
-            JSONObject pigObject = new JSONObject();
-            pigObject.put("type", pig.getClass().getSimpleName());
-            pigObject.put("alive", true);
-            pigObject.put("x", pig.getX());
-            pigObject.put("y", pig.getY());
-            pigObject.put("angle", pig.getAngle());
-            jsonArray.put(pigObject);
+           if(pig.alive) {
+               JSONObject pigObject = new JSONObject();
+               pigObject.put("type", pig.getClass().getSimpleName());
+               pigObject.put("alive", pig.alive);
+               pigObject.put("x", pig.getX());
+               pigObject.put("y", pig.getY());
+               pigObject.put("angle", pig.getAngle());
+               pigObject.put("HP", pig.Hp);
+               jsonArray.put(pigObject);
+           }
         }
 
         String filepath = "data/level" + level + "pigs.json";
@@ -259,33 +313,32 @@ public class FileManager {
    public void saveBlocks(ArrayList<Block> blocks, int level, boolean reset) {
     if (reset) {
         try {
-            // Read default blocks file
             String defaultFilepath = "data/defaultlevel" + level + "blocks.json";
             FileHandle defaultFileHandle = Gdx.files.local(defaultFilepath);
 
             if (defaultFileHandle.exists()) {
-                // Copy default file to current level blocks file
                 String currentFilepath = "data/level" + level + "blocks.json";
                 FileHandle currentFileHandle = Gdx.files.local(currentFilepath);
                 defaultFileHandle.copyTo(currentFileHandle);
-                return; // Exit method after copying default file
+                return;
             }
         } catch (Exception e) {
-            // Log error or handle exception as needed
             System.err.println("Error resetting blocks: " + e.getMessage());
         }
     }
 
-    // If not resetting or default file doesn't exist, save current blocks
     JSONArray jsonArray = new JSONArray();
     for (Block block : blocks) {
+        if(block.alive) {
         JSONObject blockObject = new JSONObject();
         blockObject.put("type", block.getClass().getSimpleName());
-        blockObject.put("alive", true);
+        blockObject.put("alive", block.alive);
         blockObject.put("x", block.getX());
         blockObject.put("y", block.getY());
         blockObject.put("angle", block.getDynamicFallingBody().getAngle());
+        blockObject.put("HP", block.health);
         jsonArray.put(blockObject);
+    }
     }
 
     String filepath = "data/level" + level + "blocks.json";

@@ -1,17 +1,19 @@
 [{
   "type": "AlienPig",
   "alive": true,
-  "x": 1179,
-    "y": 685,
-    "angle": 75
+  "x": 1177,
+    "y": 585,
+    "angle": 75,
+    "HP": 20
 
 },
   {
     "type": "HektorPorko",
     "alive": true,
-    "x": 1179,
-    "y": 655,
-    "angle": 75
+    "x": 1177,
+    "y": 680,
+    "angle": 0,
+    "HP": 30
 
   },
   {
@@ -19,7 +21,8 @@
     "alive": true,
     "x": 1179,
     "y": 480,
-    "angle": 75
+    "angle": 75,
+    "HP": 50
 
   }
 ]

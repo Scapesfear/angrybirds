@@ -7,6 +7,6 @@ import io.github.angry_birds.CustomWorld;
 
 public class Chuck extends Bird {
     public Chuck(CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch, Catapult catapult) {
-        super("ui/chuck.png", world, shapeRenderer, batch,catapult,1.5f,"chuck" );
+        super("ui/chuck.png", world, shapeRenderer, batch,catapult,2f,"chuck",10);
     }
 }

@@ -102,9 +102,9 @@ public class    MyGame implements Screen {
         birds = new Stack<>();
         birds = FileManager.getInstance().loadBirds(world, shapeRenderer, batch, catapult, 1,false);
         blocks = new ArrayList<>();
-        blocks.add(new Wood(1177, 500, world, shapeRenderer, batch,0));
-        blocks.add(new Ice(1177, 600, world, shapeRenderer, batch,45));
-        blocks.add(new Stone(1177, 700, world, shapeRenderer, batch,45));
+        blocks.add(new Wood(1177, 500, world, shapeRenderer, batch,0,20));
+        blocks.add(new Ice(1177, 600, world, shapeRenderer, batch,45,20));
+        blocks.add(new Stone(1177, 700, world, shapeRenderer, batch,45,20));
 
         pigs = new ArrayList<>();
         pigs = FileManager.getInstance().loadPigs(world, shapeRenderer, batch, 1,false);
@@ -291,7 +291,7 @@ public class    MyGame implements Screen {
 
         for (Block block : blocks) {
             block.render(batch);
-            block.isinboundary(blocks);
+            block.isinboundary();
         }
         for (Pig pig : pigs) {
             pig.render(batch);

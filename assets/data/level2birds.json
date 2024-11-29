@@ -1,18 +1,19 @@
 [
-    {
-        "alive": true,
-        "type": "RedBird"
-    },
-    {
-        "alive": true,
-        "type": "Bomb"
-    },
-    {
-        "alive": true,
-        "type": "RedBird"
-    },
-    {
-        "alive": true,
-        "type": "Chuck"
+  {
+    "type": "RedBird",
+    "alive": true
+  }
+
+    ,{
+        "type": "Bomb",
+        "alive": true
+    }
+    ,{
+        "type": "RedBird",
+        "alive": true
+    }
+    ,{
+        "type": "Chuck",
+        "alive": true
     }
 ]

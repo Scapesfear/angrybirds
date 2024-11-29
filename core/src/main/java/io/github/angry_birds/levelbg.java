@@ -25,10 +25,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.BodyEditorLoader;
 import io.github.angry_birds.Bird.Bird;
 import io.github.angry_birds.Block.*;
-import io.github.angry_birds.Pig.AlienPig;
-import io.github.angry_birds.Pig.KingPig;
 import io.github.angry_birds.Pig.Pig;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -72,7 +69,7 @@ public class levelbg implements Screen {
     private final float PIXELS_TO_METERS = 50f;
     private final Texture circleTexture = new Texture(Gdx.files.internal("ui/planet.png"));
     private final Texture newball=(new Texture(Gdx.files.internal("ui/wood.png")));
-    private boolean freeze=false;
+    public boolean freeze=false;
     private Body staticCircleBody5;
     private Body staticCircleBody6;
     //private Box2DDebugRenderer debugRenderer;
@@ -82,7 +79,7 @@ public class levelbg implements Screen {
     private final Texture mainmenubutton= new Texture("ui/menuescreen.png");;
     private final Texture reload =new Texture("ui/restart.png");
     private final Texture play= new Texture("ui/play_.png");
-
+    private GameContactListener listener =new GameContactListener(this);
     public levelbg(Main game,int level, boolean reset, Sound asound) {
 
         Sound sound1;
@@ -116,7 +113,7 @@ public class levelbg implements Screen {
         camera.setToOrtho(false, 1600 / PIXELS_TO_METERS, 900 / PIXELS_TO_METERS);
         camera.position.set(1600 / 100f, 900 / 100f, 0);
         camera.update();
-
+        world.getWorld().setContactListener(listener);
         viewport = new FitViewport(1600, 900, camera);
 
         long soundId = sound.play(1);
@@ -133,13 +130,8 @@ public class levelbg implements Screen {
         birds = new Stack<>();
         birds = FileManager.getInstance().loadBirds(world, shapeRenderer, batch, catapult, level,reset);
 
-
         blocks = new ArrayList<>();
          blocks = FileManager.getInstance().loadBlocks(world, shapeRenderer, batch, level,reset);
-
-
-
-
 
         pigs = new ArrayList<>();
         pigs = FileManager.getInstance().loadPigs(world, shapeRenderer, batch, level,reset);
@@ -154,6 +146,7 @@ public class levelbg implements Screen {
 
     @Override
     public void render(float delta) {
+        int cnt=0;
         shapeRenderer.setProjectionMatrix(camera.combined);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -179,8 +172,11 @@ public class levelbg implements Screen {
         for (Block block : blocks) {
             block.render(batch);
         }
+
         for (Pig pig : pigs) {
+            if(pig.alive){
             pig.render(batch);
+        }else{cnt++;}
         }
 
 
@@ -188,6 +184,7 @@ public class levelbg implements Screen {
             world.destroyBody(bird);
             bird=null;
             freeze=false;
+            listener.reset();
         }
         if (Gdx.input.justTouched()) {
             if (touchPos.x >= 50 && touchPos.x <= 150 && touchPos.y >= 900 - 40 - menubutton.getHeight() && touchPos.y <= 900 - 40&& !freeze) {
@@ -242,8 +239,11 @@ public class levelbg implements Screen {
                 ((Bird) bird.getUserData()).renderafterlaunch(batch);
             }
         }
-        if (birds.isEmpty()&&bird==null) {
+        if (birds.isEmpty()&&bird==null&&cnt!=pigs.size()) {
             windowlose.setVisible(true);
+            Gdx.input.setInputProcessor(stage);
+        }else if (cnt==pigs.size()){
+            windowwin.setVisible(true);
             Gdx.input.setInputProcessor(stage);
         }
 
@@ -257,11 +257,14 @@ public class levelbg implements Screen {
             windowlose.setVisible(true);
             Gdx.input.setInputProcessor(stage);
         }
+
+        if(bird!=null){
+
+        }
         batch.end();
         stage.act(delta);
         stage.draw();
         world.step(1/60f, 6, 2);
-
     }
 
     @Override
@@ -310,6 +313,7 @@ public class levelbg implements Screen {
         fixtureDef.friction = 0.7f;
         fixtureDef.restitution = 0.3f;
         body.createFixture(fixtureDef);
+        body.setUserData(this);
         circleShape.dispose();
         return body;
     }
@@ -330,6 +334,7 @@ public class levelbg implements Screen {
         fd.friction = 0.3f;
         fd.restitution = 0.3f;
         loader.attachFixture(body, "Name", fd, 4.3f);
+        body.setUserData(this);
         return body;
     }
 
@@ -416,9 +421,7 @@ public class levelbg implements Screen {
         menuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                FileManager.getInstance().saveBirds(birds, level, true);
-                FileManager.getInstance().savePigs((ArrayList<Pig>) pigs, level, true);
-               FileManager.getInstance().saveBlocks((ArrayList<Block>) blocks, level, true);
+                FileManager.setcompletedlevel(level);
                 game.setScreen(new MenuScreen(game));
             }
         });

@@ -2,6 +2,7 @@ package io.github.angry_birds;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,8 +18,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class MenuScreen implements Screen {
 
@@ -78,7 +82,7 @@ public class MenuScreen implements Screen {
         this.level= 1;
         this.game = game;
         this.sound = Gdx.audio.newSound(Gdx.files.internal("ui/abf.mp3"));
-        long soundId = sound.play(0.5f);
+        long soundId = sound.play(0.12f);
         sound.setLooping(soundId, true);
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
@@ -151,8 +155,7 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Tick clicked - Level: " + level);
-                sound.stop();
-                game.setScreen(new levelbg(game, level, false));
+                game.setScreen(new levelbg(game, level, false,sound));
             }
         });
 
@@ -160,8 +163,7 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Notick clicked - Level: " + level);
-                sound.stop();
-                game.setScreen(new levelbg(game, level, true));
+                game.setScreen(new levelbg(game, level, true,sound));
             }
         });
 
@@ -227,7 +229,6 @@ public class MenuScreen implements Screen {
             false, false);
         float scaledExitButtonWidth = (float) backbutton.getWidth() / 2;
         float scaledExitButtonHeight = (float) backbutton.getHeight() / 2;
-//        batch.draw(backbutton, 50, 40, scaledExitButtonWidth, scaledExitButtonHeight);
         batch.draw(worldclouds, 0, 0,worldclouds.getWidth(),worldclouds.getHeight());
         batch.draw(world1, 300f, 300f, 0.9f * world1.getWidth(), 0.9f * world1.getHeight());
         batch.draw(world2, 700f, 300f, 0.9f * world1.getWidth(), 0.9f * world1.getHeight());
@@ -237,13 +238,11 @@ public class MenuScreen implements Screen {
         batch.draw(worldboundary1, 1073f, 277f, 1.1f * world1.getWidth(), 1.1f * world1.getHeight());
         batch.draw(backbutton, 50, 40, scaledExitButtonWidth, scaledExitButtonHeight);
         batch.end();
-        System.out.println("Current level before touch: " + level);
         if (Gdx.input.justTouched()) {
             float x = Gdx.input.getX();
             float y = Gdx.input.getY();
             camera.unproject(touchPos.set(x, y, 0f), viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
 
-            // Only process level selection if the window is NOT visible
             if (!window.isVisible()) {
                 if (touchPos.x >= 50 && touchPos.x <= 150 && touchPos.y >= 50 && touchPos.y <= 150) {
                     game.setScreen(new FirstScreen(game,sound));
@@ -251,18 +250,15 @@ public class MenuScreen implements Screen {
 
                 if (touchPos.x >= 337 && touchPos.x <= 500 && touchPos.y >= 337 && touchPos.y <= 500) {
                     this.level = 1;
-                    window.setVisible(true);
-                    Gdx.input.setInputProcessor(stage);
+                    window1();
                 }
                 else if (touchPos.x >= 737 && touchPos.x <= 900 && touchPos.y >= 337 && touchPos.y <= 500) {
                     this.level = 2;
-                    window.setVisible(true);
-                    Gdx.input.setInputProcessor(stage);
+                   window1();
                 }
                 else if (touchPos.x >= 1137 && touchPos.x <= 1300 && touchPos.y >= 337 && touchPos.y <= 500) {
                     this.level = 3;
-                    window.setVisible(true);
-                    Gdx.input.setInputProcessor(stage);
+                    window1();
                 }
             }
         }
@@ -304,6 +300,19 @@ public class MenuScreen implements Screen {
         stage.dispose();
         worldclouds.dispose();
         asteroid4.dispose();
+
+    }
+    private void window1(){
+        String filepath = "data/LevelMatrix.json";
+        FileHandle fileHandle = Gdx.files.internal(filepath);
+        String content = fileHandle.readString();
+        JSONArray jsonArray = new JSONArray(content);
+        JSONObject blockObject = jsonArray.getJSONObject(level-1);
+        if(!blockObject.getBoolean(""+level)){
+            window.setVisible(true);
+            Gdx.input.setInputProcessor(stage);
+        }
+        else{game.setScreen(new levelbg(game, level, true,sound));}
 
     }
 }

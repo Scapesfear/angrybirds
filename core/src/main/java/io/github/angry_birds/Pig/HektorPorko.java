@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import io.github.angry_birds.CustomWorld;
 
 public class HektorPorko extends Pig {
-    public HektorPorko( CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch, float x, float y, float angle) {
-        super("ui/hektor.png", world, shapeRenderer, batch, x, y, angle, "hektor");
+    public HektorPorko( CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch, float x, float y, float angle,int HP) {
+        super("ui/hektor.png", world, shapeRenderer, batch, x, y, angle, "hektor",HP);
     }
 }

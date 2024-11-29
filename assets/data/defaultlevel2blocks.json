@@ -4,55 +4,63 @@
     "alive": true,
     "x": 1016,
     "y": 453,
-    "angle": 0
+    "angle": 0,
+    "HP": 10
   },
   {
     "type": "Wood",
     "alive": true,
     "x": 1016,
     "y": 503,
-    "angle": 0
+    "angle": 0,
+    "HP": 10
   },
   {
     "type": "Wood",
     "alive": true,
     "x": 1166,
     "y": 453,
-    "angle": 0
+    "angle": 0,
+    "HP": 10
   },
   {
     "type": "Wood",
     "alive": true,
     "x": 1166,
     "y": 503,
-    "angle": 0
+    "angle": 0,
+    "HP": 10
   },
   {
     "type": "Wood",
     "alive": true,
     "x": 1316,
     "y": 453,
-    "angle": 0
+    "angle": 0,
+    "HP": 10
   },
   {
     "type": "Wood",
     "alive": true,
     "x": 1316,
     "y": 503,
-    "angle": 0
+    "angle": 0,
+    "HP": 10
   },
   {
     "type": "IcePlank",
     "alive": true,
     "x": 1086,
     "y": 528,
-    "angle": 0
+    "angle": 0,
+    "HP": 15
   },
   {
     "type": "IcePlank",
     "alive": true,
     "x": 1256,
     "y": 528,
-    "angle": 0
+    "angle": 0,
+    "HP": 15
   }
 ]

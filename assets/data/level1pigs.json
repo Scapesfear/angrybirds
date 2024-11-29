@@ -1,23 +1,8 @@
-[
-    {
-        "alive": true,
-        "x": 1154.677,
-        "y": 656.6312,
-        "angle": 75,
-        "type": "AlienPig"
-    },
-    {
-        "alive": true,
-        "x": 1203.4025,
-        "y": 654.79706,
-        "angle": 75,
-        "type": "HektorPorko"
-    },
-    {
-        "alive": true,
-        "x": 1155.8086,
-        "y": 408.8623,
-        "angle": 75,
-        "type": "KingPig"
-    }
-]
+[{
+    "alive": true,
+    "x": 1173.4613,
+    "HP": 48,
+    "y": 411.2132,
+    "angle": 75,
+    "type": "KingPig"
+}]

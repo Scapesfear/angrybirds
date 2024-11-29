@@ -1,37 +1,42 @@
 [
-    {
-        "alive": true,
-        "x": 1070.2257,
-        "y": 437.1844,
-        "angle": 6.987499E-7,
-        "type": "Stone"
-    },
-    {
-        "alive": true,
-        "x": 1116.7885,
-        "y": 478.00598,
-        "angle": 0.39280713,
-        "type": "Stone"
-    },
-    {
-        "alive": true,
-        "x": 1186.5162,
-        "y": 437.3553,
-        "angle": -0.0035324476,
-        "type": "Stone"
-    },
-    {
-        "alive": true,
-        "x": 1184.0509,
-        "y": 488.1155,
-        "angle": -0.003576744,
-        "type": "Stone"
-    },
-    {
-        "alive": true,
-        "x": 1180.3351,
-        "y": 525.5341,
-        "angle": -0.002657125,
-        "type": "StonePlank"
-    }
+  {
+    "type": "Stone",
+    "alive": true,
+    "x": 1069,
+    "y": 453,
+    "angle": 0,
+    "HP": 20
+  },
+  {
+    "type": "Stone",
+    "alive": true,
+    "x": 1069,
+    "y": 503,
+    "angle": 0,
+    "HP": 20
+  },
+  {
+    "type": "Stone",
+    "alive": true,
+    "x": 1180,
+    "y": 453,
+    "angle": 0,
+    "HP": 20
+  },
+  {
+    "type": "Stone",
+    "alive": true,
+    "x": 1180,
+    "y": 503,
+    "angle": 0,
+    "HP": 20
+  },
+  {
+    "type": "StonePlank",
+    "alive": true,
+    "x": 1124,
+    "y": 528,
+    "angle": 0,
+    "HP": 25
+  }
 ]
