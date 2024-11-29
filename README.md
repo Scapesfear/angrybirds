@@ -1,10 +1,10 @@
 # Angry Birds Space-Themed Game
 
 ##Resources used 
-https://www.spriters-resource.com/mobile/angrybirdspace/
-DALL-E generated images
-Used resources from Box2D editor 
-LibGDx and Box2D documentation
+-https://www.spriters-resource.com/mobile/angrybirdspace/
+-DALL-E generated images
+-Used resources from Box2D editor 
+-LibGDx and Box2D documentation
 
 ## OverviewD
 This game is a faithful recreation of the classic Angry Birds gameplay, but with a space-themed twist. The core objective remains the same - use a slingshot to launch birds at structures housing evil pigs, with the goal of destroying all the pigs in each level.
