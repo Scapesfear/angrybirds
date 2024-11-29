@@ -1,5 +1,4 @@
-
-package io.github.angry_birds.Bird;
+package testbirds;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,7 +13,7 @@ import com.mygdx.BodyEditorLoader;
 import io.github.angry_birds.Catapult;
 import io.github.angry_birds.CustomWorld;
 
-public class Bird {
+public class testbird {
     private Body dynamicFallingBody;
     private Sprite birdTexture;
     private float x;
@@ -29,8 +28,8 @@ public class Bird {
     private float density ;
     private Vector2 origin;
 
-    public Bird(String imagePath, CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch,Catapult catapult,float density,String name,int damage) {
-        birdTexture = new Sprite(new Texture(imagePath));
+    public testbird(String imagePath, CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch,Catapult catapult,float density,String name,int damage) {
+        //birdTexture = new Sprite(new Texture(imagePath));
         this.world = world;
         this.shapeRenderer = shapeRenderer;
         this.batch = batch;
@@ -51,7 +50,7 @@ public class Bird {
                 birdTexture.setSize(45, 45);
             }
             else{
-            birdTexture.setSize(50, 50);}
+                birdTexture.setSize(50, 50);}
             birdTexture.setOrigin(origin.x*PIXELS_TO_METERS, origin.y*PIXELS_TO_METERS);
             birdTexture.setRotation(dynamicFallingBody.getAngle() * MathUtils.radiansToDegrees);
             birdTexture.draw(batch);
@@ -127,7 +126,7 @@ public class Bird {
     }
 
     public boolean isinboundary(){
-        if (dynamicFallingBody.getPosition().x >=1610 || dynamicFallingBody.getPosition().x <=-10||dynamicFallingBody.getPosition().y<=-10) {
+        if (x >=1610 || x <=-10|y<=-10) {
             return true;
         } else {
             return false;

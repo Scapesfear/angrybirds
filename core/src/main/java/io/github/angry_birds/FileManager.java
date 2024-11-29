@@ -273,24 +273,24 @@ public class FileManager {
     public void savePigs(ArrayList<Pig> pigs, int level, boolean reset) {
         if (reset) {
             try {
-                // Read default pigs file
+
                 String defaultFilepath = "data/defaultlevel" + level + "pigs.json";
                 FileHandle defaultFileHandle = Gdx.files.local(defaultFilepath);
 
                 if (defaultFileHandle.exists()) {
-                    // Copy default file to current level pigs file
+
                     String currentFilepath = "data/level" + level + "pigs.json";
                     FileHandle currentFileHandle = Gdx.files.local(currentFilepath);
                     defaultFileHandle.copyTo(currentFileHandle);
-                    return; // Exit method after copying default file
+                    return;
                 }
             } catch (Exception e) {
-                // Log error or handle exception as needed
+
                 System.err.println("Error resetting pigs: " + e.getMessage());
             }
         }
 
-        // If not resetting or default file doesn't exist, save current pigs
+
         JSONArray jsonArray = new JSONArray();
         for (Pig pig : pigs) {
            if(pig.alive) {

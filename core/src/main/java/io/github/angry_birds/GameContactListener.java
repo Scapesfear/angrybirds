@@ -27,67 +27,11 @@ public class GameContactListener implements ContactListener {
         contactPair2.add(bodyA);
         contactPair2.add(bodyB);
         if (lvl.freeze) {
-            if (processedContacts.contains(contactPair1)||processedContacts.contains(contactPair2)) {
+            if (processedContacts.contains(contactPair1) || processedContacts.contains(contactPair2)) {
                 return;
             }
             processedContacts.add(contactPair1);
-            if (!(bodyA.getUserData() instanceof levelbg) && !(bodyB.getUserData() instanceof levelbg)) {
-                if(bodyA.getUserData() instanceof Bird && bodyB.getUserData() instanceof Block){
-                    Bird bird = (Bird) bodyA.getUserData();
-                    Block block = (Block) bodyB.getUserData();
-                    block.health=block.health-bird.damage;
-                }
-                else if (bodyA.getUserData() instanceof Block && bodyB.getUserData() instanceof Bird) {
-                    Bird bird = (Bird) bodyB.getUserData();
-                    Block block = (Block) bodyA.getUserData();
-                    block.health=block.health-bird.damage;
-                }
-                else if(bodyA.getUserData() instanceof Bird && bodyB.getUserData() instanceof Pig){
-                    Bird bird = (Bird) bodyA.getUserData();
-                    Pig pig = (Pig) bodyB.getUserData();
-                    pig.Hp=pig.Hp-bird.damage;
-                }
-                else if (bodyA.getUserData() instanceof Pig && bodyB.getUserData() instanceof Bird) {
-                    Bird bird = (Bird) bodyB.getUserData();
-                    Pig pig = (Pig) bodyA.getUserData();
-                    pig.Hp=pig.Hp-bird.damage;
-                }
-            }
-            else{
-                if (bodyA.getUserData() instanceof levelbg && bodyB.getUserData() instanceof Block) {
-                    Block b=((Block) bodyB.getUserData());
-                    b.health=b.health-2;
-                }
-                else if (bodyB.getUserData() instanceof levelbg && bodyA.getUserData() instanceof Block) {
-                    Block a=((Block) bodyA.getUserData());
-                    a.health=a.health-2;
-                }
-                else if (bodyA.getUserData() instanceof levelbg && bodyB.getUserData() instanceof Pig) {
-                    Pig b=((Pig) bodyB.getUserData());
-                    b.Hp=b.Hp-2;
-                }
-                else if (bodyB.getUserData() instanceof levelbg && bodyA.getUserData() instanceof Pig) {
-                    Pig a=((Pig) bodyA.getUserData());
-                    a.Hp=a.Hp-2;
-                }
-                else if (bodyA.getUserData() instanceof Block && bodyB.getUserData() instanceof Block) {
-                    Block a=((Block) bodyA.getUserData());
-                    Block b=((Block) bodyB.getUserData());
-                    a.health=a.health-b.damage;
-                    b.health=b.health-a.damage;
-                }
-                else if (bodyB.getUserData() instanceof Block && bodyA.getUserData() instanceof Pig) {
-                    Pig A=((Pig) bodyA.getUserData());
-                    Block B=((Block) bodyB.getUserData());
-                    A.Hp=A.Hp-B.damage;
-                }
-
-                else if (bodyB.getUserData() instanceof Pig&& bodyA.getUserData() instanceof Block) {
-                    Pig b=((Pig) bodyB.getUserData());
-                    Block a=((Block) bodyA.getUserData());
-                    b.Hp=b.Hp-a.damage;
-                }
-            }
+            processcontacts(bodyA,bodyB);
         }
     }
     @Override
@@ -101,5 +45,62 @@ public class GameContactListener implements ContactListener {
 
     public void reset() {
         processedContacts.clear();
+    }
+    public void processcontacts(Body bodyA,Body bodyB){
+
+           if(bodyA.getUserData() instanceof Bird && bodyB.getUserData() instanceof Block){
+                Bird bird = (Bird) bodyA.getUserData();
+                Block block = (Block) bodyB.getUserData();
+                block.health=block.health-bird.damage;
+            }
+            else if (bodyA.getUserData() instanceof Block && bodyB.getUserData() instanceof Bird) {
+                Bird bird = (Bird) bodyB.getUserData();
+                Block block = (Block) bodyA.getUserData();
+                block.health=block.health-bird.damage;
+            }
+            else if(bodyA.getUserData() instanceof Bird && bodyB.getUserData() instanceof Pig){
+                Bird bird = (Bird) bodyA.getUserData();
+                Pig pig = (Pig) bodyB.getUserData();
+                pig.Hp=pig.Hp-bird.damage;
+            }
+            else if (bodyA.getUserData() instanceof Pig && bodyB.getUserData() instanceof Bird) {
+                Bird bird = (Bird) bodyB.getUserData();
+                Pig pig = (Pig) bodyA.getUserData();
+                pig.Hp=pig.Hp-bird.damage;
+            }
+
+            if (bodyA.getUserData() instanceof levelbg && bodyB.getUserData() instanceof Block) {
+                Block b=((Block) bodyB.getUserData());
+                b.health=b.health-2;
+            }
+            else if (bodyB.getUserData() instanceof levelbg && bodyA.getUserData() instanceof Block) {
+                Block a=((Block) bodyA.getUserData());
+                a.health=a.health-2;
+            }
+            else if (bodyA.getUserData() instanceof levelbg && bodyB.getUserData() instanceof Pig) {
+                Pig b=((Pig) bodyB.getUserData());
+                b.Hp=b.Hp-2;
+            }
+            else if (bodyB.getUserData() instanceof levelbg && bodyA.getUserData() instanceof Pig) {
+                Pig a=((Pig) bodyA.getUserData());
+                a.Hp=a.Hp-2;
+            }
+            else if (bodyA.getUserData() instanceof Block && bodyB.getUserData() instanceof Block) {
+                Block a=((Block) bodyA.getUserData());
+                Block b=((Block) bodyB.getUserData());
+                a.health=a.health-b.damage;
+                b.health=b.health-a.damage;
+            }
+            else if (bodyB.getUserData() instanceof Block && bodyA.getUserData() instanceof Pig) {
+                Pig A=((Pig) bodyA.getUserData());
+                Block B=((Block) bodyB.getUserData());
+                A.Hp=A.Hp-B.damage;
+            }
+
+            else if (bodyB.getUserData() instanceof Pig&& bodyA.getUserData() instanceof Block) {
+                Pig b=((Pig) bodyB.getUserData());
+                Block a=((Block) bodyA.getUserData());
+                b.Hp=b.Hp-a.damage;
+            }
     }
 }

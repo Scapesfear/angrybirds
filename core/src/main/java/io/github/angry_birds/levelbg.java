@@ -55,14 +55,14 @@ public class levelbg implements Screen {
     private Window windowwin;
     private Window windowlose;
     private final Catapult catapult=new Catapult("ui/catapult.png", 400, 400);
-    private Stack<Bird> birds;
+    public Stack<Bird> birds;
     private final int bird_idx=0;
     private boolean isDragging = false;
     private boolean isMouseHeld = false;
     private boolean launchactivated = false;
     private final boolean launchrender = false;
     private List<Block> blocks;
-    private List<Pig> pigs;
+    public List<Pig> pigs;
     private final boolean isPaused = false;
     private final CustomWorld world= new CustomWorld(new Vector2(0, -9.8f), true);
     private ShapeRenderer shapeRenderer;
@@ -293,11 +293,7 @@ public class levelbg implements Screen {
         shapeRenderer.dispose();
         circleTexture.dispose();
         birds.clear();
-        //debugRenderer.dispose();
-//        for (Body body : world.getBodiesToDestroy()) {
-//            world.destroyBody(body);
-//        }
-//        world.getBodiesToDestroy().clear();
+        world.dispose();
     }
 
     public Body planet(float x, float y, float radius) {

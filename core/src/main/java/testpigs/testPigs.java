@@ -1,21 +1,16 @@
-package io.github.angry_birds.Pig;
+package testpigs;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.BodyEditorLoader;
-import io.github.angry_birds.Block.Block;
 import io.github.angry_birds.CustomWorld;
 
-import java.util.List;
-
-public class Pig {
+public class testPigs {
     private Body dynamicFallingBody;
     private Sprite pigTexture;
     private float x;
@@ -30,8 +25,8 @@ public class Pig {
     private Vector2 origin;
     private String name;
 
-    public Pig(String imagePath, CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch, float x, float y, float angle, String name,int Hp) {
-        pigTexture = new Sprite(new Texture(imagePath));
+    public testPigs(String imagePath, CustomWorld world, ShapeRenderer shapeRenderer, SpriteBatch batch, float x, float y, float angle, String name,int Hp) {
+        //pigTexture = new Sprite(new Texture(imagePath));
         this.world = world;
         this.shapeRenderer = shapeRenderer;
         this.batch = batch;
@@ -58,22 +53,23 @@ public class Pig {
     }
 
     public Body createDynamicFallingBody() {
-        BodyEditorLoader loader;
-        loader = new BodyEditorLoader(Gdx.files.internal("data/pigs.json"));
-        BodyDef bd = new BodyDef();
-        bd.type = BodyDef.BodyType.DynamicBody;
-        bd.position.set(x / PIXELS_TO_METERS, y / PIXELS_TO_METERS);
-        Body body = world.createBody(bd);
-        FixtureDef fd = new FixtureDef();
-        fd.density = 1f;
-        fd.friction = 0.5f;
-        fd.restitution = 0.2f;
-        loader.attachFixture(body,name, fd, 0.9f);
-        this.origin = loader.getOrigin(name, 0.9f);
-        body.setAngularDamping(4f);
-        body.setUserData(this);
-        this.dynamicFallingBody = body;
-        return body;
+//        BodyEditorLoader loader;
+//       // loader = new BodyEditorLoader(Gdx.files.internal("data/pigs.json"));
+//        BodyDef bd = new BodyDef();
+//        bd.type = BodyDef.BodyType.DynamicBody;
+//        bd.position.set(x / PIXELS_TO_METERS, y / PIXELS_TO_METERS);
+//        Body body = world.createBody(bd);
+//        FixtureDef fd = new FixtureDef();
+//        fd.density = 1f;
+//        fd.friction = 0.5f;
+//        fd.restitution = 0.2f;
+//        loader.attachFixture(body,name, fd, 0.9f);
+//        this.origin = loader.getOrigin(name, 0.9f);
+//        body.setAngularDamping(4f);
+//        body.setUserData(this);
+//        this.dynamicFallingBody = body;
+//        return body;
+        return null;
     }
 
     public void dispose() {
@@ -81,7 +77,7 @@ public class Pig {
     }
 
     public float getX() {
-       return dynamicFallingBody.getPosition().x * PIXELS_TO_METERS ;
+        return dynamicFallingBody.getPosition().x * PIXELS_TO_METERS ;
     }
 
     public void setX(float x) {
@@ -105,13 +101,14 @@ public class Pig {
     }
 
     public void isinboundary() {
-        if (dynamicFallingBody.getPosition().x >=1610 || dynamicFallingBody.getPosition().x <=-10||dynamicFallingBody.getPosition().y<=-10||Hp<=0) {
-            world.destroyBody(dynamicFallingBody);
+        if (x >=1610 || x <=-10|| y<=-10||Hp<=0) {
+            //world.destroyBody(dynamicFallingBody);
             alive=false;
-            dynamicFallingBody=null;
+            //dynamicFallingBody=null;
         }
+        else{alive=true;}
     }
-    }
+}
 //    public boolean isAlive() {
 //        return alive;
 //    }

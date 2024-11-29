@@ -19,7 +19,6 @@ public class LoadingScreen implements Screen {
     private static final float LOADING_DURATION = 10.0f;
     private ShapeRenderer shapeRenderer;
     private  Viewport viewport;
-    public  final float PIXELS_TO_METERS = viewport.getScreenWidth() / viewport.getWorldWidth();
     private static final float WORLD_WIDTH = 1600;
     private static final float WORLD_HEIGHT = 900;
 
