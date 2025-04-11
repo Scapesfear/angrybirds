@@ -10,7 +10,7 @@
 -LibGDx and Box2D documentation
 
 
-## OverviewD
+## Overview
 This game is a faithful recreation of the classic Angry Birds gameplay, but with a space-themed twist. The core objective remains the same - use a slingshot to launch birds at structures housing evil pigs, with the goal of destroying all the pigs in each level.
 
 What sets this version apart is the imaginative setting and enhanced visuals. The game takes place against the backdrop of a vast, starry sky, with levels set on various celestial bodies like planets and asteroids. The bird and pig characters have been redesigned with a sci-fi flair, adding to the immersive space theme.
